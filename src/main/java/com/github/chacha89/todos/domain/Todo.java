@@ -22,6 +22,7 @@ public class Todo {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    // user != assignee
     @Column(name = "assignee", nullable = false, length = 50)
     private String assignee;
 
@@ -116,3 +117,16 @@ public class Todo {
     }
 
 }
+
+// 만약 assignee도 실제 회원(User)라면 User 타입으로 맵핑하는 것이 더 강력하고 안전합니다
+// @ManyToOne
+// @JoinColumn(name = "assignee_id", nullable = false)
+    // 장점
+    // private User assignee;
+    // 정확한 사용자 ID 추적 가능
+    // 나중에 userName, image 등도 쉽게 접근 가능 (todo.getAssignee().getUserName())
+    // 단점
+    // 때로는 이름만 남기고 싶은 경우에는 과할 수 있음
+// 결론:
+// 현재처럼 user는 User 엔티티, assignee는 단순한 이름(String)으로 처리하는 것도 완전히 괜찮습니다.
+// 단, assignee도 등록된 사용자일 가능성이 높다면 User로 바꾸는 것이 더 정규화된 설계입니다.

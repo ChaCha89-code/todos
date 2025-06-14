@@ -1,5 +1,6 @@
 package com.github.chacha89.todos.domain;
 
+import com.github.chacha89.todos.objectType.ObjectType;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -20,8 +21,11 @@ public class Log {
     @Column(name = "object_id", nullable = false)
     private Long objectId;
 
-    @Column(name = "object_type", nullable = false, length = 50)
-    private String objectType;
+    // 단순 문자열로 저장하면 오타나 오류 발생할 수 있음.
+    // ObjectType의 올바른 import: import com.github.chacha89.todos.domain.ObjectType; (직접 정의한 enum)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "object_type", nullable = false)
+    private ObjectType objectType;
 
     @Column(name = "activity_type", nullable = false, length = 50)
     private String activityType;
@@ -34,7 +38,7 @@ public class Log {
 
     public Log() {}
 
-    public Log(Long id, User user, Long objectId, String objectType, String activityType, String requestUrl, LocalDateTime requestTime) {
+    public Log(Long id, User user, Long objectId, ObjectType objectType, String activityType, String requestUrl, LocalDateTime requestTime) {
         this.id = id;
         this.user = user;
         this.objectId = objectId;
@@ -56,7 +60,7 @@ public class Log {
         return objectId;
     }
 
-    public String getObjectType() {
+    public ObjectType getObjectType() {
         return objectType;
     }
 
