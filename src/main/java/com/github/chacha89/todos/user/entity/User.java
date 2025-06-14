@@ -1,6 +1,6 @@
 package com.github.chacha89.todos.user.entity;
 
-import com.github.chacha89.todos.domain.Team;
+import com.github.chacha89.todos.team.entity.Team;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -45,14 +45,21 @@ public class User {
 
     public User() {}
 
-    public User(String userName, String email, String password) {
+    //
+    public User(Team team, String userName, String email, String password, String userImage) {
+        this.team = team;
         this.userName = userName;
         this.email = email;
         this.password = password;
+        this.userImage = userImage;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Team getTeam() {
+        return team;
     }
 
     public String getEmail() {

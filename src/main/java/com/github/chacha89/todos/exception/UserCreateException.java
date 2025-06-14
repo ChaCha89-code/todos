@@ -1,7 +1,14 @@
 package com.github.chacha89.todos.exception;
 
 public class UserCreateException extends RuntimeException {
-    public UserCreateException(String message) {
+    private int status;
+
+    public UserCreateException(int status, String message) {
         super(message);
+        this.status = status;
+    }
+
+    public int getStatus() {
+        return status;
     }
 }

@@ -1,12 +1,13 @@
-package com.github.chacha89.todos.user.dto.responseDto;
+package com.github.chacha89.todos.team.dto.responseDto;
 
-public class UserCreateResponseDto {
+public class TeamCreateResponseDto {
     // 속성
     private int status;
     private String message;
 
     // 생성자
-    public UserCreateResponseDto(int status, String message) {
+
+    public TeamCreateResponseDto(int status, String message) {
         this.status = status;
         this.message = message;
     }
@@ -19,5 +20,4 @@ public class UserCreateResponseDto {
     public String getMessage() {
         return message;
     }
-
 }
