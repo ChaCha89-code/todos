@@ -55,7 +55,8 @@ public class Todo {
     // 생성자
     public Todo() {}
 
-    public Todo(User user, String assignee, String image, String content, String priority, String progress, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDate today, LocalDate dueDate) {
+    public Todo(Long id, User user, String assignee, String image, String content, String priority, String progress, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDate today, LocalDate dueDate) {
+        this.id = id;
         this.user = user;
         this.assignee = assignee;
         this.image = image;
