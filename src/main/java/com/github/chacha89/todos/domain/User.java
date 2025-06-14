@@ -37,6 +37,8 @@ public class User {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    public User() {}
+
     public User(String userName, String email, String password) {
         this.userName = userName;
         this.email = email;
