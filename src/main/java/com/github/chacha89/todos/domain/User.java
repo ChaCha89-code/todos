@@ -17,9 +17,14 @@ public class User {
     @Column(name = "id")
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "team_id", nullable = false)
+    private Team team;
+
     @Column(name = "email", nullable = false, length = 50, unique = true)
     private String email;
 
+    // 반드시 암호화(해시) 후 저장: new BCryptPasswordEncoder().encode(password)
     @Column(name = "password", nullable = false)
     private String password;
 
