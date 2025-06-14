@@ -1,5 +1,6 @@
-package com.github.chacha89.todos.domain;
+package com.github.chacha89.todos.user.entity;
 
+import com.github.chacha89.todos.domain.Team;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;

@@ -1,6 +1,7 @@
 package com.github.chacha89.todos.domain;
 
 import com.github.chacha89.todos.objectType.ObjectType;
+import com.github.chacha89.todos.user.entity.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
