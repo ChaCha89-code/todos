@@ -1,4 +1,4 @@
 package com.github.chacha89.todos.user.controller;
 
-public class Controller {
+public class UserController {
 }
