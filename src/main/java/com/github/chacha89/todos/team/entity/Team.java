@@ -1,6 +1,9 @@
-package com.github.chacha89.todos.domain;
+package com.github.chacha89.todos.team.entity;
 
+import com.github.chacha89.todos.user.entity.User;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "teams")
@@ -11,7 +14,7 @@ public class Team {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "team_name", nullable = false, length = 50)
+    @Column(name = "team_name", nullable = false, length = 50, unique = true)
     private String teamName;
 
     @Column(name = "description", nullable = false)
@@ -20,11 +23,13 @@ public class Team {
 //    @Column(name = "member_count", nullable = false)
 //    private Long memberCount;
 
+//    @OneToMany(mappedBy = "team")
+//    private List<User> users;
+
     // 생성자
     public Team() {}
 
-    public Team(Long id, String teamName, String description) {
-        this.id = id;
+    public Team(String teamName, String description) {
         this.teamName = teamName;
         this.description = description;
     }
