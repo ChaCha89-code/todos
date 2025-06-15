@@ -1,5 +1,6 @@
-package com.github.chacha89.todos.domain;
+package com.github.chacha89.todos.user.entity;
 
+import com.github.chacha89.todos.team.entity.Team;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -17,9 +18,14 @@ public class User {
     @Column(name = "id")
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "team_id", nullable = false)
+    private Team team;
+
     @Column(name = "email", nullable = false, length = 50, unique = true)
     private String email;
 
+    // 반드시 암호화(해시) 후 저장: new BCryptPasswordEncoder().encode(password)
     @Column(name = "password", nullable = false)
     private String password;
 
@@ -37,14 +43,23 @@ public class User {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public User(String userName, String email, String password) {
+    public User() {}
+
+    //
+    public User(Team team, String userName, String email, String password, String userImage) {
+        this.team = team;
         this.userName = userName;
         this.email = email;
         this.password = password;
+        this.userImage = userImage;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Team getTeam() {
+        return team;
     }
 
     public String getEmail() {
