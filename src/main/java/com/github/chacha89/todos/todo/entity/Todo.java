@@ -1,4 +1,4 @@
-package com.github.chacha89.todos.domain;
+package com.github.chacha89.todos.todo.entity;
 
 import com.github.chacha89.todos.user.entity.User;
 import jakarta.persistence.*;
