@@ -5,12 +5,12 @@ import org.springframework.http.HttpStatus;
 public class LoginResponseDto {
     private int status;
     private String message;
-    private String JWTToken;
+    private String bearerJWTToken;
 
     public LoginResponseDto(HttpStatus status, String JWTToken) {
         this.status = status.value();
         this.message = "로그인이 완료되었습니다.";
-        this.JWTToken = JWTToken;
+        this.bearerJWTToken = JWTToken;
     }
 
     public int getStatus() {
@@ -22,6 +22,6 @@ public class LoginResponseDto {
     }
 
     public String getJWTToken() {
-        return JWTToken;
+        return bearerJWTToken;
     }
 }

@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -24,7 +25,7 @@ public class LoginService {
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
     }
-
+    @Transactional
     public LoginResponseDto JWTAuthLoginAPI(LoginRequestDto loginRequestDto) {
         // 사용자 조회
         User user = userRepository.findByEmail(loginRequestDto.getEmail())
@@ -37,8 +38,8 @@ public class LoginService {
         if (!passwordMatches) {
             throw new LoginInvalidPasswordException();
         }
+        // 로그인 성공 후 토큰 발급
         String jwtKey = jwtService.createJWTKey(user, user.getId());
-
         return new LoginResponseDto(HttpStatus.OK,jwtKey);
 
     }
