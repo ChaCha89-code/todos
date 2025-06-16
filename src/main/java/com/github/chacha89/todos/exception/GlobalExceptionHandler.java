@@ -42,5 +42,14 @@ public class GlobalExceptionHandler {
                 = new ResponseEntity<>(LoginInvalidPasswordResponse, HttpStatus.BAD_REQUEST);
         return LoginInvalidPasswordExceptionResponse;
     }
+    @ExceptionHandler(ServerException.class)
+    public ResponseEntity<APIErrorResponseDto> handleServerException(ServerException e)
+    {
+        APIErrorResponseDto ServerExceptionResponse
+                = APIErrorResponseDto.errorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+        ResponseEntity<APIErrorResponseDto> ExceptionResponse
+                = new ResponseEntity<>(ServerExceptionResponse, HttpStatus.BAD_REQUEST);
+        return ExceptionResponse;
+    }
 
 }

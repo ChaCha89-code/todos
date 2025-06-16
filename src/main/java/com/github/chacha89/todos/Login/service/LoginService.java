@@ -37,8 +37,8 @@ public class LoginService {
         if (!passwordMatches) {
             throw new LoginInvalidPasswordException();
         }
+        // 로그인 성공 후 토큰 발급
         String jwtKey = jwtService.createJWTKey(user, user.getId());
-
         return new LoginResponseDto(HttpStatus.OK,jwtKey);
 
     }

@@ -1,4 +1,4 @@
 package com.github.chacha89.todos.jwt.controller;
 
-public class JWTcontroller {
+public class JWTController {
 }

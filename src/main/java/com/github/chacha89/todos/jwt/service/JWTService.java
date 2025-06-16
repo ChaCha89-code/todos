@@ -1,13 +1,14 @@
 package com.github.chacha89.todos.jwt.service;
 
+import com.github.chacha89.todos.exception.ServerException;
 import com.github.chacha89.todos.user.entity.User;
-import io.jsonwebtoken.Claims;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import java.security.SecureRandom;
+import org.springframework.util.StringUtils;
 
 
 import javax.crypto.SecretKey;
@@ -35,6 +36,7 @@ public class JWTService {
      */
     // secretKey = qweasd123456!@#$%^987654321ZXCASDQWE
 //    private String JWTSecretKey = System.getenv("JWT_SECRET_KEY"); // 환경변수로 설정한 키 가져오는 속성값
+    private static final String BEARER_PREFIX = "Bearer ";
     private String JWTSecretKey = "qweasd123456!@#$%^987654321ZXCASDQWE";
 
 
@@ -46,11 +48,12 @@ public class JWTService {
         // 데이터 준비
         String subjectUser = userId.toString(); // 사용자준비
         Date now = new Date(); // 현재시간
-        Date expiration = new Date(now.getTime()+1000*60); // 만료시간 1분
-//        Date expiration = new Date(now.getTime()+1000*900); // 만료시간 15분
+//        Date expiration = new Date(now.getTime()+1000*60); // 만료시간 1분
+        Date expiration = new Date(now.getTime()+1000*60*60); // 만료시간 60분
 
         // 토큰 제작
-        String JWTToken = Jwts.builder()
+
+        String JWTToken = BEARER_PREFIX + Jwts.builder()
                 .subject(subjectUser)
                 .issuedAt(now)
                 .claim("role","admin") // 사용자 권한
@@ -66,5 +69,10 @@ public class JWTService {
 
         return JWTToken;
     }
-
+    public String substringToken(String JWTToken) {
+        if (StringUtils.hasText(JWTToken) && JWTToken.startsWith(BEARER_PREFIX)) {
+            return JWTToken.substring(7);
+        }
+        throw new ServerException();
+    }
 }
