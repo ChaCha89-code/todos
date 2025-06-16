@@ -31,4 +31,6 @@ public class TeamController {
         TeamCreateResponseDto responseDto = teamService.createTeamService(requestDto);
         return ResponseEntity.ok(responseDto);
     }
+
+
 }

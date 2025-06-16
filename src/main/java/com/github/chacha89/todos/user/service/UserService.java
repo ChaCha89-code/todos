@@ -4,6 +4,7 @@ import com.github.chacha89.todos.exception.UserCreateException;
 import com.github.chacha89.todos.team.entity.Team;
 import com.github.chacha89.todos.team.repository.TeamRepository;
 import com.github.chacha89.todos.user.dto.requestDto.UserCreateRequestDto;
+import com.github.chacha89.todos.user.dto.requestDto.UserUpdateRequestDto;
 import com.github.chacha89.todos.user.dto.responseDto.UserCreateResponseDto;
 import com.github.chacha89.todos.user.entity.User;
 import com.github.chacha89.todos.user.repository.UserRepository;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.UUID;
 
 // 서비스(권장): 도메인 데이터 또는 Dto 반환 O. ResponseEntity 반환 X.
@@ -112,6 +114,55 @@ public class UserService {
         // 4. 응답
         return new UserCreateResponseDto(200, "회원가입이 정상적으로 완료 되었습니다.");
 
+    }
+
+    public UserCreateResponseDto userUpdateAPI(Long id,UserUpdateRequestDto updateRequest){
+        String newPassword = updateRequest.getNewPassword();
+        String newUserImage = updateRequest.getNewUserImage();
+        String confirmPassword = updateRequest.getConfirmPassword();
+
+        User userToUpdate= userRepository.findById(id).
+                orElseThrow();
+
+        //유저 이미지 변경 로직
+        if( !(newUserImage == null) && !newUserImage.isBlank()){
+            userToUpdate.changeUserImage(confirmPassword);
+        }
+
+        //유저 비밀번호 변경 로직
+        if(!(newPassword == null) &&!newPassword.isBlank()){
+
+            //비밀번호 확인 절차
+            //!passwordEncoder.matches(confirmPassword, userToUpdate.getPassword())
+            //!confirmPassword.equals(userToUpdate.getPassword()))
+            if (!confirmPassword.equals(userToUpdate.getPassword())){
+                throw new UserCreateException(400, "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+            }
+
+            if (!newPassword.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\w\\s])[\\S]{8,20}$")) {
+                throw new UserCreateException(400, "비밀번호는 최소 8자리, 최대 20자리이며, 대소문자, 숫자, 특수문자를 포함해야 합니다.");
+            }
+
+
+            // 비밀번호 암호화
+            String encodedPassword = passwordEncoder.encode(newPassword);
+            userToUpdate.changePassword(newPassword);
+        }
+        // 2. 엔티티 생성
+        userRepository.save(userToUpdate);
+
+        // 4. 응답
+        return new UserCreateResponseDto(203, "회원수정이 정상적으로 완료되었습니다.");
+    }
+
+
+    public UserCreateResponseDto deleteUserAPI(Long id){
+
+        userRepository.findById(id)
+                .orElseThrow(() -> new UserCreateException(400, "존재하지 않는 회원입니다."));
+
+        userRepository.deleteById(id);
+        return new UserCreateResponseDto(200, "회원삭제가 정상적으로 완료되었습니다.");
     }
 
 }
