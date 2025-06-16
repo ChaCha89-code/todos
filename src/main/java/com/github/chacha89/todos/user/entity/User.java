@@ -85,4 +85,12 @@ public class User {
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void changeUserImage(String userImage) {
+        this.userImage = userImage;
+    }
 }

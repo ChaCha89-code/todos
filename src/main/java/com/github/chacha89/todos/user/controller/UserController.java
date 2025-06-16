@@ -1,6 +1,7 @@
 package com.github.chacha89.todos.user.controller;
 
 import com.github.chacha89.todos.user.dto.requestDto.UserCreateRequestDto;
+import com.github.chacha89.todos.user.dto.requestDto.UserUpdateRequestDto;
 import com.github.chacha89.todos.user.dto.responseDto.APIResponse;
 import com.github.chacha89.todos.user.dto.responseDto.UserCreateResponseDto;
 import com.github.chacha89.todos.user.dto.responseDto.UserInfoResponseDto;
@@ -40,6 +41,16 @@ public class UserController {
     public APIResponse<UserInfoResponseDto> getuser(@PathVariable Long id) {
         UserInfoResponseDto user = userService.getUserById(id);
         return APIResponse.success(user, "회원 조회 성공");
+    }
+
+    /**
+     * 수정
+     */
+    @PatchMapping("/{id}")
+    public ResponseEntity <UserCreateResponseDto >updateUserAPI(@PathVariable Long id,
+                              @RequestBody UserUpdateRequestDto updateRequest){
+        UserCreateResponseDto userUpdatedResponse = userService.updateUserAPI(id, updateRequest);
+        return ResponseEntity.ok(userUpdatedResponse);
     }
 
 

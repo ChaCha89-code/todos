@@ -4,6 +4,7 @@ import com.github.chacha89.todos.exception.UserCreateException;
 import com.github.chacha89.todos.team.entity.Team;
 import com.github.chacha89.todos.team.repository.TeamRepository;
 import com.github.chacha89.todos.user.dto.requestDto.UserCreateRequestDto;
+import com.github.chacha89.todos.user.dto.requestDto.UserUpdateRequestDto;
 import com.github.chacha89.todos.user.dto.responseDto.UserCreateResponseDto;
 import com.github.chacha89.todos.user.dto.responseDto.UserInfoResponseDto;
 import com.github.chacha89.todos.user.entity.User;
@@ -21,7 +22,6 @@ import java.util.UUID;
 
 // 서비스(권장): 도메인 데이터 또는 Dto 반환 O. ResponseEntity 반환 X.
 @Service
-
 public class UserService {
     // 속성
     private final UserRepository userRepository;
@@ -123,4 +123,32 @@ public class UserService {
       return UserInfoResponseDto.from(user,"회원을 조회 하였습니다.");
 
   }
+
+    /**
+     * 회원 수정
+     */
+    public UserCreateResponseDto updateUserAPI(Long id, UserUpdateRequestDto updateRequest){
+
+        //1. 변경할 user 객체 찾기
+        User userToUpdate = userRepository.findById(id).orElseThrow();
+
+        String confirmPassword = updateRequest.getConfirmPassword();
+        String newPassword = updateRequest.getNewPassword();
+        String newUserImage = updateRequest.getNewUserImage();
+
+        if( !(newUserImage == null) && !(newUserImage.isBlank())){
+            userToUpdate.changeUserImage(newUserImage);
+        }
+
+        if(!passwordEncoder.matches(confirmPassword, userToUpdate.getPassword())){
+            throw new UserCreateException(400, "비밀번호가 일치하지 않습니다.");
+        }
+        if(!(newPassword ==null) && newPassword.equals(userToUpdate.getPassword()) && !newPassword.isBlank()){
+            userToUpdate.changePassword(newPassword);
+        }
+
+        userRepository.save(userToUpdate);
+
+        return new UserCreateResponseDto(200, "회원 수정이 성공적으로 이루어졌습니다.");
+    }
 }
