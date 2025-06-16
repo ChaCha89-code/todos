@@ -7,7 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-// "/teams/**", "/users/**", "/todos/**", "/comments/**", "/logs/**"
+// "/teams/**", "/users/**", "/todos/**", "/comments/**", "/logs/**","/auth/**"
 @Configuration
 public class SecurityConfig {
 
@@ -21,7 +21,7 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/teams/**", "/users/**").permitAll()
+                        .requestMatchers("/teams/**", "/users/**","/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.disable())
