@@ -151,4 +151,12 @@ public class UserService {
 
         return new UserCreateResponseDto(200, "회원 수정이 성공적으로 이루어졌습니다.");
     }
+
+    /**
+     * 회원 삭제
+     */
+    public UserCreateResponseDto deleteUserAPI(Long id){
+        userRepository.deleteById(id);
+        return new UserCreateResponseDto(200, "회원이 삭제되었습니다.");
+    }
 }
