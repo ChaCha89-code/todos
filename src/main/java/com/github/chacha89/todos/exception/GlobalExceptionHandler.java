@@ -42,6 +42,7 @@ public class GlobalExceptionHandler {
                 = new ResponseEntity<>(LoginInvalidPasswordResponse, HttpStatus.BAD_REQUEST);
         return LoginInvalidPasswordExceptionResponse;
     }
+    // 제대로 된 토큰이 아닐 경우 예외처리
     @ExceptionHandler(ServerException.class)
     public ResponseEntity<APIErrorResponseDto> handleServerException(ServerException e)
     {
@@ -50,6 +51,16 @@ public class GlobalExceptionHandler {
         ResponseEntity<APIErrorResponseDto> ExceptionResponse
                 = new ResponseEntity<>(ServerExceptionResponse, HttpStatus.BAD_REQUEST);
         return ExceptionResponse;
+    }
+    // 인증되지 않는 토큰을 검사시에 예외처리
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<APIErrorResponseDto> handleUnauthorizedException(UnauthorizedException e)
+    {
+        APIErrorResponseDto UnauthorizedResponse
+                = APIErrorResponseDto.errorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+        ResponseEntity<APIErrorResponseDto> UnauthorizedExceptionResponse
+                = new ResponseEntity<>(UnauthorizedResponse, HttpStatus.BAD_REQUEST);
+        return UnauthorizedExceptionResponse;
     }
 
 }

@@ -1,31 +1,28 @@
 package com.github.chacha89.todos.security.filter;
 
+
+
+
 import com.github.chacha89.todos.jwt.service.JWTService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.PatternMatchUtils;
 
-import javax.crypto.SecretKey;
+
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+
 
 @Slf4j
 public class JWTFilter implements Filter {
-
-    private static final String[] WHITE_lIST = {"/teams", "/users", "/auth/login"};
-
-    // 팀플을 위한 임시 비밀키
-    private final String JWTSecretKey = "qweasd123456!@#$%^987654321ZXCASDQWE";
     private final JWTService jwtService;
 
     public JWTFilter(JWTService jwtService) {
         this.jwtService = jwtService;
     }
+
+    private static final String[] WHITE_lIST = {"/teams", "/users", "/auth/login"};
 
     @Override
     public void doFilter(ServletRequest servletRequest
@@ -42,14 +39,12 @@ public class JWTFilter implements Filter {
             filterChain.doFilter(servletRequest,servletResponse);
             return;
         } // ("/users", "/auth/login") 2개의 url이면 메서드 종료
-        String jwtToken = httpRequest.getHeader("Authorization");
+        String bearJWTToken = httpRequest.getHeader("Authorization");
         // 토큰 부재시 400에러 응답
-        if (jwtToken == null) {
+        if (bearJWTToken == null) {
             httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST,"잘못된 토큰 입니다");
             return;
         }
-
-
 
     }
 
@@ -60,30 +55,6 @@ public class JWTFilter implements Filter {
      */
     public boolean isWhiteList(String requestURI) {
         return PatternMatchUtils.simpleMatch(WHITE_lIST, requestURI);
-    }
-
-    // 토큰 검증 로직 ( 발급한 토큰이 맞나?)
-    public Long verifyToken(String JWTToken) {
-        // 시그니처키 만들기
-        SecretKey secretKey = Keys.hmacShaKeyFor(jwtService.createJWTKey().getBytes(StandardCharsets.UTF_8));
-
-        // 토큰 검증 로직
-        Claims claims = Jwts.parser() // 토큰 분석 준비
-                .verifyWith(secretKey) // 비밀키 검증
-                .build() //파서(분석기) 제작
-                .parseSignedClaims(JWTToken) // 발급한 토큰을 분석, .claim을 검증하고 읽음 유효하면 claim 반환
-                .getPayload(); // claim 객체에서 페이로드 추출
-        log.info("claims {} " ,claims);
-
-        // 사용자 추출
-        String subjectUser = claims.getSubject();
-        log.info("subjectUser {} ", subjectUser);
-
-        // 타입 변환
-        long userId = Long.parseLong(subjectUser);
-        log.info("userID {} ",userId);
-
-        return userId;
     }
 
 }
