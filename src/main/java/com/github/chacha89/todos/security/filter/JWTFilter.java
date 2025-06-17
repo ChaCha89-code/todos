@@ -12,6 +12,8 @@ import org.springframework.util.PatternMatchUtils;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 @Slf4j
@@ -22,7 +24,7 @@ public class JWTFilter implements Filter {
         this.jwtService = jwtService;
     }
 
-    private static final String[] WHITE_lIST = {"/teams", "/users", "/auth/login"};
+    private static final String[] WHITE_lIST = {"/teams", "/users", "/auth/login","/todos/**"};
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
@@ -31,13 +33,15 @@ public class JWTFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         String requestURI = httpRequest.getRequestURI();
         HttpServletResponse httpResponse = (HttpServletResponse)servletResponse;
-
+        log.info("WHITE_lIST {}", Arrays.toString(WHITE_lIST));
 
         // WhiteList에 추가된 URL{"/users", "/auth/login"}인지 검사
         if (isWhiteList(requestURI)){
             filterChain.doFilter(servletRequest,servletResponse);
+            // ("/users", "/auth/login") 2개의 url이면 메서드 종료
             return;
-        } // ("/users", "/auth/login") 2개의 url이면 메서드 종료
+        }
+
         String bearJWTToken = httpRequest.getHeader("Authorization");
         // 토큰 부재시 400에러 응답
         if (bearJWTToken == null || !bearJWTToken.startsWith("Bearer")) {
@@ -54,7 +58,12 @@ public class JWTFilter implements Filter {
      * @return WHITE_lIST = {"/", "/users", "/auth/login"} 리스트에 있다면 true, 없다면 false
      */
     public boolean isWhiteList(String requestURI) {
-        return PatternMatchUtils.simpleMatch(WHITE_lIST, requestURI);
+
+        boolean simpleMatch = PatternMatchUtils.simpleMatch(WHITE_lIST, requestURI);
+        log.info("WHITE_LIST {} requsetURI {}", WHITE_lIST,requestURI);
+        log.info("simpleMatch {}", simpleMatch);
+        return simpleMatch;
+
     }
 
 }

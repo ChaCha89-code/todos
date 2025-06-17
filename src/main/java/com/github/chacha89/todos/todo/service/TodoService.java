@@ -16,6 +16,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -92,6 +94,12 @@ public class TodoService {
                 savedTodo.getUpdatedAt()
         );
 
+    }
+    @Transactional
+    public void getTodoListService() {
+        // 데이터 준비
+        List<Todo> todoList = todoRepository.findAll();
+        ArrayList<Object> todoDtoList = new ArrayList<>();
     }
 
 
