@@ -3,12 +3,14 @@ package com.github.chacha89.todos.todo.service;
 import com.github.chacha89.todos.exception.TodoCreateException;
 import com.github.chacha89.todos.todo.dto.TodoCreateRequestDto;
 import com.github.chacha89.todos.todo.dto.TodoCreateResponseDto;
+import com.github.chacha89.todos.todo.dto.response.dto.dto.response.GetTodoListResponseDto;
 import com.github.chacha89.todos.todo.entity.Todo;
 import com.github.chacha89.todos.todo.repository.TodoRepository;
 import com.github.chacha89.todos.user.entity.User;
 import com.github.chacha89.todos.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +21,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class TodoService {
@@ -96,10 +99,18 @@ public class TodoService {
 
     }
     @Transactional
-    public void getTodoListService() {
+    public List<GetTodoListResponseDto> getTodoListService() {
         // 데이터 준비
-        List<Todo> todoList = todoRepository.findAll();
-        ArrayList<Object> todoDtoList = new ArrayList<>();
+        List<Todo> todoListFindAll = todoRepository.findAll();
+        // 컬렉션 리스트로 만들 깡통 준비
+        List<GetTodoListResponseDto> todoDtoList = new ArrayList<>();
+        // 리스트 완성
+        List<GetTodoListResponseDto> responseDtoList = todoListFindAll.stream()
+                .map(todoList -> new GetTodoListResponseDto(todoDtoList))
+                .collect(Collectors.toList());
+
+        return responseDtoList;
+
     }
 
 
