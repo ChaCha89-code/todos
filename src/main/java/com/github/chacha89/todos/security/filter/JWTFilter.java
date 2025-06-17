@@ -8,6 +8,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.util.PatternMatchUtils;
 
 
@@ -44,6 +45,19 @@ public class JWTFilter implements Filter {
         if (bearJWTToken == null) {
             httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST,"잘못된 토큰 입니다");
             return;
+        }
+
+
+        // 토큰 인증 로직
+        String token = bearJWTToken.substring(7);
+
+        try {
+            log.info("token: {}", token);
+            jwtService.verifyToken(token);
+            filterChain.doFilter(servletRequest, servletResponse);
+        } catch (Exception e) {
+            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "잘못된 토큰입니다.");
+
         }
 
     }
