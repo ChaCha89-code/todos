@@ -36,12 +36,10 @@ public class Comment {
     // 기능
     public Comment() {}
 
-    public Comment(Long id, User user, Todo todo, String comment, LocalDateTime createdAt) {
-        this.id = id;
+    public Comment(User user, Todo todo, String comment) {
         this.user = user;
         this.todo = todo;
         this.comment = comment;
-        this.createdAt = createdAt;
     }
 
     public Long getId() {

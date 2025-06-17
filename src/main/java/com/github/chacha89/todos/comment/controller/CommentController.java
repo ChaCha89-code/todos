@@ -1,7 +1,9 @@
 package com.github.chacha89.todos.comment.controller;
 
 import com.github.chacha89.todos.comment.dto.CommentCreateRequestDto;
+import com.github.chacha89.todos.comment.dto.CommentCreateResponseDto;
 import com.github.chacha89.todos.comment.service.CommentService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +22,9 @@ public class CommentController {
      * 커멘트 생성 API
      */
     @PostMapping
-    public void createCommentAPI(@RequestBody CommentCreateRequestDto requestDto) {
-        // commentService.
+    public ResponseEntity<CommentCreateResponseDto> createCommentAPI(@RequestBody CommentCreateRequestDto requestDto) {
+        CommentCreateResponseDto responseDto = commentService.createCommentAPI(requestDto);
+        return ResponseEntity.ok(responseDto);
     }
 
 }
