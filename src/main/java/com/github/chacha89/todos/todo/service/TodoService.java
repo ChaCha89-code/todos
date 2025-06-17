@@ -34,6 +34,7 @@ public class TodoService {
     public TodoCreateResponseDto createTodoService(TodoCreateRequestDto requestDto) {
 
         // 1. 데이터 준비
+        Long userId = requestDto.getUserId();
         String title = requestDto.getTitle();
         MultipartFile image = requestDto.getImage();
         String todoContents = requestDto.getTodoContents();
@@ -61,7 +62,35 @@ public class TodoService {
 
         }
 
+        if(title.isBlank() || title == null
+                || todoContents.isBlank() || todoContents == null
+                || assignee.isBlank() || assignee == null
+                || priority.isBlank() || priority == null
+                || progress.isBlank() || progress == null
+                || dueDate.isBefore(LocalDate.now()))
+        {
+            throw new TodoCreateException(400, "필수 항목 중 빈 항목이 있거나 마감일이 잘못 설정되었습니다. 다시 확인해주세요.");
+        }
 
+        User foundUser = userRepository.findById(userId).
+                orElseThrow(() -> new TodoCreateException(404, "존재하지 않는 사용자입니다."));
+
+        Todo newTodo = new Todo(foundUser, title, url, todoContents, assignee, priority, progress, dueDate);
+
+        Todo savedTodo = todoRepository.save(newTodo);
+
+        return new TodoCreateResponseDto(
+                savedTodo.getTitle(),
+                savedTodo.getImage(),
+                savedTodo.getContent(),
+                foundUser.getId(),
+                savedTodo.getAssignee(),
+                savedTodo.getPriority(),
+                savedTodo.getProgress(),
+                savedTodo.getDueDate(),
+                savedTodo.getCreatedAt(),
+                savedTodo.getUpdatedAt()
+        );
 
     }
 

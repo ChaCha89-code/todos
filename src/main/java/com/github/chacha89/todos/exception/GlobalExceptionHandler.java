@@ -1,6 +1,7 @@
 package com.github.chacha89.todos.exception;
 
 import com.github.chacha89.todos.team.dto.responseDto.TeamCreateResponseDto;
+import com.github.chacha89.todos.todo.dto.TodoCreateErrorResponseDto;
 import com.github.chacha89.todos.todo.dto.TodoCreateResponseDto;
 import com.github.chacha89.todos.user.dto.responseDto.APIErrorResponseDto;
 import com.github.chacha89.todos.user.dto.responseDto.UserCreateResponseDto;
@@ -66,8 +67,8 @@ public class GlobalExceptionHandler {
 
     // 할 일 작성 예외 처리
     @ExceptionHandler(TodoCreateException.class)
-    public ResponseEntity<TodoCreateResponseDto> handleTodoCreateException(TodoCreateException e) {
-        return ResponseEntity.status(e.getStatus()).body(new TodoCreateResponseDto(e.getStatus(), e.getMessage()));
+    public ResponseEntity<TodoCreateErrorResponseDto> handleTodoCreateException(TodoCreateException e) {
+        return ResponseEntity.status(e.getStatus()).body(new TodoCreateErrorResponseDto(e.getStatus(), e.getMessage()));
     }
 
 }

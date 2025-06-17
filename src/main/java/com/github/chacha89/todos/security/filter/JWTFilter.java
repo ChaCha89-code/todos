@@ -45,11 +45,6 @@ public class JWTFilter implements Filter {
             return;
         }
 
-        String token = bearJWTToken.substring(7);
-
-        String email = jwtService.extractEmail(token);
-
-
 
     }
 

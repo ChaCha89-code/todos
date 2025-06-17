@@ -3,7 +3,6 @@ package com.github.chacha89.todos.todo.controller;
 import com.github.chacha89.todos.todo.dto.TodoCreateRequestDto;
 import com.github.chacha89.todos.todo.dto.TodoCreateResponseDto;
 import com.github.chacha89.todos.todo.service.TodoService;
-import com.github.chacha89.todos.user.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +20,8 @@ public class TodoController {
     }
 
     @PostMapping
-    public ResponseEntity<TodoCreateRequestDto> createTodoAPI(@ModelAttribute TodoCreateRequestDto requestDto) {
-        todoService.createTodoService(requestDto);
+    public ResponseEntity<TodoCreateResponseDto> createTodoAPI(@ModelAttribute TodoCreateRequestDto requestDto) {
+        TodoCreateResponseDto responseDto = todoService.createTodoService(requestDto);
+        return ResponseEntity.ok(responseDto);
     }
 }

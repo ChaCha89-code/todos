@@ -3,6 +3,7 @@ package com.github.chacha89.todos.todo.dto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class TodoCreateResponseDto {
     private String title;
@@ -13,10 +14,10 @@ public class TodoCreateResponseDto {
     private String priority;
     private String progress;
     private LocalDate dueDate;
-    private LocalDate createdAt;
-    private LocalDate updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    public TodoCreateResponseDto(String title, String image, String todoContents, Long userId, String assignee, String priority, String progress, LocalDate dueDate, LocalDate createdAt, LocalDate updatedAt) {
+    public TodoCreateResponseDto(String title, String image, String todoContents, Long userId, String assignee, String priority, String progress, LocalDate dueDate, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.title = title;
         this.image = image;
         this.todoContents = todoContents;
@@ -61,11 +62,11 @@ public class TodoCreateResponseDto {
         return dueDate;
     }
 
-    public LocalDate getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public LocalDate getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 }
