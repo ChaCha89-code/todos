@@ -25,9 +25,8 @@ public class JWTFilter implements Filter {
     private static final String[] WHITE_lIST = {"/teams", "/users", "/auth/login"};
 
     @Override
-    public void doFilter(ServletRequest servletRequest
-            , ServletResponse servletResponse
-            , FilterChain filterChain) throws IOException, ServletException
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+            throws IOException, ServletException
     {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         String requestURI = httpRequest.getRequestURI();
@@ -41,10 +40,11 @@ public class JWTFilter implements Filter {
         } // ("/users", "/auth/login") 2개의 url이면 메서드 종료
         String bearJWTToken = httpRequest.getHeader("Authorization");
         // 토큰 부재시 400에러 응답
-        if (bearJWTToken == null) {
+        if (bearJWTToken == null || !bearJWTToken.startsWith("Bearer")) {
             httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST,"잘못된 토큰 입니다");
             return;
         }
+
 
     }
 
