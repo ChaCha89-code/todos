@@ -1,4 +1,4 @@
-package com.github.chacha89.todos.unit.repostiory;
+package com.github.chacha89.todos.unit.repository;
 
 
 import com.github.chacha89.todos.team.entity.Team;
@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
 public class UserRepositoryTest {
+
 
 
 }
