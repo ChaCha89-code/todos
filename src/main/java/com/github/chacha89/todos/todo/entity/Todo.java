@@ -1,4 +1,4 @@
-package com.github.chacha89.todos.domain;
+package com.github.chacha89.todos.todo.entity;
 
 import com.github.chacha89.todos.user.entity.User;
 import jakarta.persistence.*;
@@ -26,6 +26,9 @@ public class Todo {
     // user != assignee
     @Column(name = "assignee", nullable = false, length = 50)
     private String assignee;
+
+    @Column(name = "title", nullable = false, length = 50)
+    private String title;
 
     @Column(name = "image")
     private String image;
@@ -57,21 +60,18 @@ public class Todo {
     // 생성자
     public Todo() {}
 
-    public Todo(Long id, User user, String assignee, String image, String content, String priority, String progress, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDate today, LocalDate dueDate) {
-        this.id = id;
+    public Todo(User user, String assignee, String title, String image, String content, String priority, String progress, LocalDate dueDate) {
         this.user = user;
         this.assignee = assignee;
+        this.title = title;
         this.image = image;
         this.content = content;
         this.priority = priority;
         this.progress = progress;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.today = today;
         this.dueDate = dueDate;
     }
 
-    // 기능
+// 기능
 
     public Long getId() {
         return id;
@@ -79,6 +79,10 @@ public class Todo {
 
     public User getUser() {
         return user;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public String getAssignee() {
