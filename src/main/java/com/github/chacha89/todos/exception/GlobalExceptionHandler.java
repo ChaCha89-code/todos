@@ -1,5 +1,6 @@
 package com.github.chacha89.todos.exception;
 
+import com.github.chacha89.todos.comment.dto.CommentCreateErrorResponseDto;
 import com.github.chacha89.todos.team.dto.responseDto.TeamCreateResponseDto;
 import com.github.chacha89.todos.todo.dto.TodoCreateErrorResponseDto;
 import com.github.chacha89.todos.todo.dto.TodoCreateResponseDto;
@@ -69,6 +70,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TodoCreateException.class)
     public ResponseEntity<TodoCreateErrorResponseDto> handleTodoCreateException(TodoCreateException e) {
         return ResponseEntity.status(e.getStatus()).body(new TodoCreateErrorResponseDto(e.getStatus(), e.getMessage()));
+    }
+
+    // 커멘트 생성 예외 처리
+    @ExceptionHandler(CommentCreateException.class)
+    public ResponseEntity<CommentCreateErrorResponseDto> handleCommentCreateException(CommentCreateException e) {
+        return ResponseEntity.status(e.getStatus()).body(new CommentCreateErrorResponseDto(e.getStatus(), e.getMessage()));
     }
 
 }
