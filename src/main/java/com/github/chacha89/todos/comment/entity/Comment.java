@@ -63,4 +63,8 @@ public class Comment {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
+    public void changeComment(String comment) {
+        this.comment = comment;
+    }
 }

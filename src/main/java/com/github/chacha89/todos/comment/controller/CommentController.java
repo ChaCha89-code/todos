@@ -1,11 +1,10 @@
 package com.github.chacha89.todos.comment.controller;
 
 import com.github.chacha89.todos.comment.dto.CommentCreateRequestDto;
+import com.github.chacha89.todos.comment.dto.CommentData;
 import com.github.chacha89.todos.comment.service.CommentService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.github.chacha89.todos.user.dto.responseDto.APIResponse;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/comments")
@@ -24,4 +23,15 @@ public class CommentController {
         // commentService.
     }
 
+
+    /**
+     * 댓글 수정
+     */
+    @PatchMapping("/{id}")
+    public APIResponse <CommentData> updateCommentAPI(@PathVariable Long id,
+                                 @RequestBody CommentCreateRequestDto updateRequest){
+        CommentData commentData = commentService.updateCommentAPI(id, updateRequest);
+
+        return APIResponse.success(commentData, "댓글 수정이 완료되었습니다.");
+    }
 }

@@ -3,6 +3,9 @@ package com.github.chacha89.todos.todo.service;
 import com.github.chacha89.todos.exception.TodoCreateException;
 import com.github.chacha89.todos.todo.dto.TodoCreateRequestDto;
 import com.github.chacha89.todos.todo.dto.TodoCreateResponseDto;
+import com.github.chacha89.todos.todo.dto.UpdateTodoRequestDto;
+import com.github.chacha89.todos.todo.entity.Priority;
+import com.github.chacha89.todos.todo.entity.Progress;
 import com.github.chacha89.todos.todo.entity.Todo;
 import com.github.chacha89.todos.todo.repository.TodoRepository;
 import com.github.chacha89.todos.user.entity.User;
@@ -16,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -93,6 +97,84 @@ public class TodoService {
         );
 
     }
+
+    /**
+     * 수정
+     */
+    public UpdateTodoRequestDto updateTodoAPI(Long id, UpdateTodoRequestDto updateRequestDto ){
+        //1. 데이터 준비
+        Todo todo = todoRepository.findById(id).orElseThrow();
+
+
+        String newTitle = updateRequestDto.getTitle();
+        String newContents = updateRequestDto.getContents();
+        String newAssignee = updateRequestDto.getAssignee();
+        String newPriority = updateRequestDto.getPriority();
+        String newProgress = updateRequestDto.getProgress();
+        String newImage = updateRequestDto.getImage();
+
+
+        //2. 변경 -> null이 아니면  변경
+
+        //제목변경
+        if (!(newTitle==null) && !newTitle.isBlank()){
+            todo.changeTitle(newTitle);
+        }
+        //내용변경
+        if (!(newContents==null) && !newContents.isBlank()){
+            todo.changeContent(newContents);
+        }
+        //담당자 변경
+        if (!(newAssignee==null) && !newAssignee.isBlank()){
+            todo.changeAssignee(newAssignee);
+        }
+        //이미지 변경
+        if (!(newImage==null) && !newImage.isBlank()){
+            todo.changeImage(newImage);
+        }
+        //우선순위 변경
+        Priority priority = Priority.Low;
+        if (!(newPriority==null) && !newPriority.isBlank()){
+            //받아온 값이 enum 인지 체크
+            if (priority.isEnum(newPriority)){
+                //newPrioriy가 더 높은 단계의 enum 값이면 변경
+                if(Priority.valueOf(newPriority).getLevel() > Priority.valueOf(todo.getPriority()).getLevel()){
+                    todo.changePriority(newPriority);
+                }
+            }
+        }
+        //진행상황 변경
+        if (!(newProgress==null) && !newProgress.isBlank()){
+            //enum체크
+            Progress progress = Progress.NotStarted;
+            //받아온 값이 enum 인지 체크
+            if (progress.isEnum(newProgress)){
+                //newPrioriy가 더 높은 단계의 enum 값이면 변경
+                if(Progress.valueOf(newProgress).getSteps() > Progress.valueOf(todo.getProgress()).getSteps()){
+                    todo.changePriority(newProgress);
+                }
+            }
+        }
+
+        Todo updatedTodo = todoRepository.save(todo);
+
+        UpdateTodoRequestDto updateTodoResponse = UpdateTodoRequestDto.builder()
+                .title(updatedTodo.getTitle())
+                .image(updatedTodo.getImage())
+                .assignee(updatedTodo.getAssignee())
+                .contents(updatedTodo.getContent())
+                .priority(updatedTodo.getPriority())
+                .progress(updatedTodo.getProgress())
+                .build();
+
+        return updateTodoResponse;
+    }
+
+
+
+
+
+
 
 
 }
