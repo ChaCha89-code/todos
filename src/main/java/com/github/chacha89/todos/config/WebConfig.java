@@ -7,6 +7,8 @@ import jakarta.servlet.Filter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -16,7 +18,9 @@ public class WebConfig implements WebMvcConfigurer {
     public WebConfig(JWTService jwtService) {
         this.jwtService = jwtService;
     }
-    @Bean
+
+
+        @Bean
     FilterRegistrationBean<Filter> addJWTFilter() {
         FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
         filterFilterRegistrationBean.setFilter(new JWTFilter(jwtService));
@@ -24,5 +28,8 @@ public class WebConfig implements WebMvcConfigurer {
         filterFilterRegistrationBean.addUrlPatterns("/*");
         return filterFilterRegistrationBean;
     }
-
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }
