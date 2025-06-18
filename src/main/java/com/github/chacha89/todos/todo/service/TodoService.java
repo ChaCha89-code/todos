@@ -3,6 +3,7 @@ package com.github.chacha89.todos.todo.service;
 import com.github.chacha89.todos.exception.TodoCreateException;
 import com.github.chacha89.todos.todo.dto.TodoCreateRequestDto;
 import com.github.chacha89.todos.todo.dto.TodoCreateResponseDto;
+import com.github.chacha89.todos.todo.dto.TodoDeleteResponseDto;
 import com.github.chacha89.todos.todo.entity.Todo;
 import com.github.chacha89.todos.todo.repository.TodoRepository;
 import com.github.chacha89.todos.user.entity.User;
@@ -16,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -94,5 +96,23 @@ public class TodoService {
 
     }
 
+    public TodoDeleteResponseDto deleteToService(Long todoId) {
+
+        // 데이터 준비
+        Optional<Todo> todoOptional = todoRepository.findById(todoId);
+
+        // 검증 로직
+        if (todoOptional.isPresent()) {
+            Todo todo= todoOptional.get();
+            todoRepository.delete(todo);
+            TodoDeleteResponseDto responseDto= new TodoDeleteResponseDto(200, "댓글이 성공적으로 삭제되었습니다.");
+            return responseDto;
+        } else {
+            TodoDeleteResponseDto responseDto = new TodoDeleteResponseDto(404, "댓글이 존재하지 않습니다.");
+            return responseDto;
+        }
+
+
+    }
 
 }
