@@ -12,11 +12,13 @@ public enum Priority {
         return level;
     }
 
-    public boolean isEnum(String str){
-        for( Priority priority : Priority.values()){
-            if(priority.name().equals(str)){
-                return true;
-            }
-        }return false;
-    }
+// TodoService : valueOf() + exception handeling 사용 -> .isEnum 사용 안해도 됨
+//    public boolean isEnum(String str){
+//        for( Priority priority : Priority.values()){
+//            if(priority.name().equals(str)){
+//                return true;
+//            }
+//        }return false;
+//    }
+
 }
