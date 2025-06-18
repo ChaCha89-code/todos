@@ -3,9 +3,12 @@ package com.github.chacha89.todos.comment.controller;
 import com.github.chacha89.todos.comment.dto.CommentCreateRequestDto;
 import com.github.chacha89.todos.comment.dto.CommentCreateResponseDto;
 import com.github.chacha89.todos.comment.dto.CommentDeleteResponseDto;
+import com.github.chacha89.todos.comment.dto.CommentData;
 import com.github.chacha89.todos.comment.service.CommentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import com.github.chacha89.todos.user.dto.responseDto.APIResponse;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -40,4 +43,15 @@ public class CommentController {
         }
     }
 
+
+    /**
+     * 댓글 수정
+     */
+    @PatchMapping("/{id}")
+    public APIResponse <CommentData> updateCommentAPI(@PathVariable Long id,
+                                 @RequestBody CommentCreateRequestDto updateRequest){
+        CommentData commentData = commentService.updateCommentAPI(id, updateRequest);
+
+        return APIResponse.success(commentData, "댓글 수정이 완료되었습니다.");
+    }
 }

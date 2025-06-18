@@ -86,4 +86,28 @@ public class CommentService {
             return responseDto;
         }
     }
+
+
+
+
+
+    /**
+     * 댓글 수정
+     */
+    public CommentData updateCommentAPI(Long id, CommentCreateRequestDto updateRequest){
+        Comment commentToUpdate = commentRepository.findById(id).orElseThrow();
+
+        String originalComment = commentToUpdate.getComment();
+        String newComment = updateRequest.getComment();
+
+        if( !(newComment ==null) &&!newComment.equals(originalComment)){
+            commentToUpdate.changeComment(newComment);
+        }
+
+        Comment updatedComment = commentRepository.save(commentToUpdate);
+
+        CommentData commentDataResponse = new CommentData(updatedComment.getId(), updatedComment.getUser().getId(), updatedComment.getTodo().getId(), updatedComment.getComment(), updatedComment.getCreatedAt());
+        return commentDataResponse ;
+    }
+
 }
