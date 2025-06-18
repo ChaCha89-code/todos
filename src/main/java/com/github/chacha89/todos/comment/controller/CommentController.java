@@ -41,11 +41,12 @@ public class CommentController {
 
     /**
      * 커멘트 삭제 API
-     * @param commentId
+     * @param id
      * @return
      */
-    public ResponseEntity<CommentDeleteResponseDto> deleteCommentAPI(@PathVariable Long commentId) {
-        CommentDeleteResponseDto responseDto = commentService.deleteCommentService(commentId);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CommentDeleteResponseDto> deleteCommentAPI(@PathVariable Long id) {
+        CommentDeleteResponseDto responseDto = commentService.deleteCommentService(id);
         if (responseDto.getStatus() == 404) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDto);
         } else {
