@@ -43,7 +43,7 @@ public class CommentService {
         User foundUser = userRepository.findById(userId).orElseThrow(() -> new CommentCreateException(404, "회원 ID가 존재하지 않습니다."));
         Todo foundTodo = todoRepository.findById(todoId).orElseThrow(() -> new CommentCreateException(404, "할 일 ID가 존재하지 않습니다."));
         if(comment == null || comment.isEmpty()) {
-            throw new CommentCreateException(400, "커멘트를 입력란이 비어있습니다.");
+            throw new CommentCreateException(400, "댓글 입력란이 비어있습니다.");
         }
 
         // 3. 엔티티 생성
