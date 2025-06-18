@@ -1,6 +1,7 @@
 package com.github.chacha89.todos.todo.dto.response.dto.dto.response;
 
 
+import com.github.chacha89.todos.todo.entity.Priority;
 import com.github.chacha89.todos.todo.entity.Todo;
 import com.github.chacha89.todos.todo.progressStatus.ProgressStatus;
 import lombok.ToString;
@@ -58,7 +59,7 @@ public class GetTodoListResponseDto {
         private final String image;
         private final String todoContent;
         private final String assignee;
-        private final String priority;
+        private final Priority priority;
         private final LocalDate dueDate;
         private final LocalDateTime createAt;
         private final LocalDateTime updateAt;
@@ -95,7 +96,7 @@ public class GetTodoListResponseDto {
             return assignee;
         }
 
-        public String getPriority() {
+        public Priority getPriority() {
             return priority;
         }
 
@@ -119,7 +120,7 @@ public class GetTodoListResponseDto {
         private final String image;
         private final String todoContent;
         private final String assignee;
-        private final String priority;
+        private final Priority priority;
         private final LocalDate dueDate;
         private final LocalDateTime createAt;
         private final LocalDateTime updateAt;
@@ -157,7 +158,7 @@ public class GetTodoListResponseDto {
             return assignee;
         }
 
-        public String getPriority() {
+        public Priority getPriority() {
             return priority;
         }
 
@@ -181,7 +182,7 @@ public class GetTodoListResponseDto {
         private final String image;
         private final String todoContent;
         private final String assignee;
-        private final String priority;
+        private final Priority priority;
         private final LocalDate dueDate;
         private final LocalDateTime createAt;
         private final LocalDateTime updateAt;
@@ -220,7 +221,7 @@ public class GetTodoListResponseDto {
             return assignee;
         }
 
-        public String getPriority() {
+        public Priority getPriority() {
             return priority;
         }
 
@@ -244,7 +245,7 @@ public class GetTodoListResponseDto {
         private final String image;
         private final String todoContent;
         private final String assignee;
-        private final String priority;
+        private final Priority priority;
         private final LocalDate dueDate;
         private final LocalDateTime createAt;
         private final LocalDateTime updateAt;
@@ -283,7 +284,7 @@ public class GetTodoListResponseDto {
             return assignee;
         }
 
-        public String getPriority() {
+        public Priority getPriority() {
             return priority;
         }
 
