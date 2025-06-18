@@ -11,13 +11,15 @@ public class CommentData {
     private Long todoId;
     private String comment;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    public CommentData(Long id, Long userId, Long todoId, String comment, LocalDateTime createdAt) {
+    public CommentData(Long id, Long userId, Long todoId, String comment, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.userId = userId;
         this.todoId = todoId;
         this.comment = comment;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public Long getId() {
@@ -39,4 +41,6 @@ public class CommentData {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
 }

@@ -43,7 +43,7 @@ public class CommentService {
         User foundUser = userRepository.findById(userId).orElseThrow(() -> new CommentCreateException(404, "회원 ID가 존재하지 않습니다."));
         Todo foundTodo = todoRepository.findById(todoId).orElseThrow(() -> new CommentCreateException(404, "할 일 ID가 존재하지 않습니다."));
         if(comment == null || comment.isEmpty()) {
-            throw new CommentCreateException(400, "커멘트를 입력란이 비어있습니다.");
+            throw new CommentCreateException(400, "댓글 입력란이 비어있습니다.");
         }
 
         // 3. 엔티티 생성
@@ -58,9 +58,10 @@ public class CommentService {
         Long foundTodoId = savedComment.getTodo().getId();
         String foundComment = savedComment.getComment();
         LocalDateTime foundCreatedAt = savedComment.getCreatedAt();
+        LocalDateTime foundUpdatedAt = savedComment.getUpdatedAt();
 
         // 6. ResponseDto에 넣어줄 CommentData 준비
-        CommentData newCommentData= new CommentData(foundCommentId, foundUserId, foundTodoId, foundComment, foundCreatedAt);
+        CommentData newCommentData= new CommentData(foundCommentId, foundUserId, foundTodoId, foundComment, foundCreatedAt, foundUpdatedAt);
 
         // 7. 반환
         return new CommentCreateResponseDto(true, 200, newCommentData);
@@ -109,7 +110,7 @@ public class CommentService {
 
         Comment updatedComment = commentRepository.save(commentToUpdate);
 
-        CommentData commentDataResponse = new CommentData(updatedComment.getId(), updatedComment.getUser().getId(), updatedComment.getTodo().getId(), updatedComment.getComment(), updatedComment.getCreatedAt());
+        CommentData commentDataResponse = new CommentData(updatedComment.getId(), updatedComment.getUser().getId(), updatedComment.getTodo().getId(), updatedComment.getComment(), updatedComment.getCreatedAt(), updatedComment.getUpdatedAt());
         return commentDataResponse ;
     }
 
