@@ -2,6 +2,7 @@ package com.github.chacha89.todos.todo.entity;
 
 import com.github.chacha89.todos.user.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -27,7 +28,8 @@ public class Todo {
     @Column(name = "assignee", nullable = false, length = 50)
     private String assignee;
 
-    @Column(name = "title", nullable = false, length = 50)
+    @Column(name = "title", nullable = false, length = 150)
+    @Size(max = 50, message = "제목은 최대 50자까지 입력 가능합니다.")
     private String title;
 
     @Column(name = "image")
