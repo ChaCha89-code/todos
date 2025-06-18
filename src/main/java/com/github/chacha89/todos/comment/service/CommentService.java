@@ -58,9 +58,10 @@ public class CommentService {
         Long foundTodoId = savedComment.getTodo().getId();
         String foundComment = savedComment.getComment();
         LocalDateTime foundCreatedAt = savedComment.getCreatedAt();
+        LocalDateTime foundUpdatedAt = savedComment.getUpdatedAt();
 
         // 6. ResponseDto에 넣어줄 CommentData 준비
-        CommentData newCommentData= new CommentData(foundCommentId, foundUserId, foundTodoId, foundComment, foundCreatedAt);
+        CommentData newCommentData= new CommentData(foundCommentId, foundUserId, foundTodoId, foundComment, foundCreatedAt, foundUpdatedAt);
 
         // 7. 반환
         return new CommentCreateResponseDto(true, 200, newCommentData);
@@ -109,7 +110,7 @@ public class CommentService {
 
         Comment updatedComment = commentRepository.save(commentToUpdate);
 
-        CommentData commentDataResponse = new CommentData(updatedComment.getId(), updatedComment.getUser().getId(), updatedComment.getTodo().getId(), updatedComment.getComment(), updatedComment.getCreatedAt());
+        CommentData commentDataResponse = new CommentData(updatedComment.getId(), updatedComment.getUser().getId(), updatedComment.getTodo().getId(), updatedComment.getComment(), updatedComment.getCreatedAt(), updatedComment.getUpdatedAt());
         return commentDataResponse ;
     }
 
