@@ -33,6 +33,12 @@ public class TodoController {
         this.jwtService = jwtService;
     }
 
+    /**
+     * 할 일 생성 API
+     * @param bearerToken
+     * @param requestDto
+     * @return
+     */
     // 1. Update your createTodoAPI method to accept the Authorization header using @RequestHeader.
     @PostMapping
     public ResponseEntity<TodoCreateResponseDto> createTodoAPI(
