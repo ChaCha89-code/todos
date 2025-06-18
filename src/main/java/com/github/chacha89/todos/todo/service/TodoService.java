@@ -125,6 +125,7 @@ public class TodoService {
                 savedTodo.getImage(),
                 savedTodo.getContent(),
                 foundUser.getId(),
+                savedTodo.getId(),
                 savedTodo.getAssignee(),
                 savedTodo.getPriority().name(),
                 savedTodo.getProgress().name(),
