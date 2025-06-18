@@ -2,6 +2,7 @@ package com.github.chacha89.todos.todo.entity;
 
 import com.github.chacha89.todos.user.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -19,7 +20,7 @@ public class Todo {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -27,7 +28,8 @@ public class Todo {
     @Column(name = "assignee", nullable = false, length = 50)
     private String assignee;
 
-    @Column(name = "title", nullable = false, length = 50)
+    @Column(name = "title", nullable = false, length = 150)
+    @Size(max = 50, message = "제목은 최대 50자까지 입력 가능합니다.")
     private String title;
 
     @Column(name = "image")
@@ -36,11 +38,13 @@ public class Todo {
     @Column(name = "content", nullable = false)
     private String content;
 
+    @Enumerated(EnumType.STRING) // enum 사용 명시
     @Column(name = "priority", nullable = false, length = 20)
-    private String priority;
+    private Priority priority;
 
+    @Enumerated(EnumType.STRING) // enum 사용 명시
     @Column(name = "progress", nullable = false, length = 20)
-    private String progress;
+    private Progress progress;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false)
@@ -60,7 +64,7 @@ public class Todo {
     // 생성자
     public Todo() {}
 
-    public Todo(User user, String assignee, String title, String image, String content, String priority, String progress, LocalDate dueDate) {
+    public Todo(User user, String assignee, String title, String image, String content, Priority priority, Progress progress, LocalDate dueDate) {
         this.user = user;
         this.assignee = assignee;
         this.title = title;
@@ -97,11 +101,11 @@ public class Todo {
         return content;
     }
 
-    public String getPriority() {
+    public Priority getPriority() {
         return priority;
     }
 
-    public String getProgress() {
+    public Progress getProgress() {
         return progress;
     }
 
@@ -121,17 +125,28 @@ public class Todo {
         return dueDate;
     }
 
-}
+    public void changeAssignee(String assignee) {
+        this.assignee = assignee;
+    }
 
-// 만약 assignee도 실제 회원(User)라면 User 타입으로 맵핑하는 것이 더 강력하고 안전합니다
-// @ManyToOne
-// @JoinColumn(name = "assignee_id", nullable = false)
-    // 장점
-    // private User assignee;
-    // 정확한 사용자 ID 추적 가능
-    // 나중에 userName, image 등도 쉽게 접근 가능 (todo.getAssignee().getUserName())
-    // 단점
-    // 때로는 이름만 남기고 싶은 경우에는 과할 수 있음
-// 결론:
-// 현재처럼 user는 User 엔티티, assignee는 단순한 이름(String)으로 처리하는 것도 완전히 괜찮습니다.
-// 단, assignee도 등록된 사용자일 가능성이 높다면 User로 바꾸는 것이 더 정규화된 설계입니다.
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    public void changeImage(String image) {
+        this.image = image;
+    }
+
+    public void changeContent(String content) {
+        this.content = content;
+    }
+
+    public void changePriority(Priority priority) {
+        this.priority = priority;
+    }
+
+    public void changeProgress(Progress progress) {
+        this.progress = progress;
+    }
+
+}

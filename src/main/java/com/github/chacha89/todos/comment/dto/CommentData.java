@@ -1,6 +1,9 @@
 package com.github.chacha89.todos.comment.dto;
 
+import lombok.Builder;
+
 import java.time.LocalDateTime;
+
 
 public class CommentData {
     private Long id;
