@@ -1,6 +1,7 @@
 package com.github.chacha89.todos.config;
 
 import com.github.chacha89.todos.jwt.service.JWTService;
+import com.github.chacha89.todos.logout.repository.BlacklistTokenRepository;
 import com.github.chacha89.todos.security.filter.JWTFilter;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.Filter;
@@ -18,10 +19,8 @@ public class WebConfig implements WebMvcConfigurer {
     public WebConfig(JWTService jwtService) {
         this.jwtService = jwtService;
     }
-
-
-        @Bean
-    FilterRegistrationBean<Filter> addJWTFilter() {
+    @Bean
+    FilterRegistrationBean<Filter> addJWTFilter(BlacklistTokenRepository blacklistTokenRepository) {
         FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
         filterFilterRegistrationBean.setFilter(new JWTFilter(jwtService));
         filterFilterRegistrationBean.setDispatcherTypes(DispatcherType.REQUEST);

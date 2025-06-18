@@ -91,6 +91,11 @@ public class TodoController {
     }
 
 
+    /**
+     * 할 일 삭제 API
+     * @param todoId
+     * @return
+     */
     @DeleteMapping("/{todoId}")
     public ResponseEntity<TodoDeleteResponseDto> deleteTodoAPI(@PathVariable Long todoId) {
         TodoDeleteResponseDto responseDto = todoService.deleteToService(todoId);

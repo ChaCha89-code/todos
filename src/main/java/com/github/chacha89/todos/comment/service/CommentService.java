@@ -32,18 +32,17 @@ public class CommentService {
     }
 
     /**
-     * 커멘트 생성 기능
+     * 댓글 생성 기능
      */
-    public CommentCreateResponseDto createCommentAPI(CommentCreateRequestDto requestDto) {
+    public CommentCreateResponseDto createCommentAPI(Long userId, CommentCreateRequestDto requestDto) {
         // 1. 데이터 준비_1
-        Long userId = requestDto.getUserId();
         Long todoId = requestDto.getTodoId();
         String comment = requestDto.getComment();
 
         // 2. 예회 처리
         User foundUser = userRepository.findById(userId).orElseThrow(() -> new CommentCreateException(404, "회원 ID가 존재하지 않습니다."));
         Todo foundTodo = todoRepository.findById(todoId).orElseThrow(() -> new CommentCreateException(404, "할 일 ID가 존재하지 않습니다."));
-        if(comment.isEmpty() || comment == null) {
+        if(comment == null || comment.isEmpty()) {
             throw new CommentCreateException(400, "커멘트를 입력란이 비어있습니다.");
         }
 
@@ -78,7 +77,11 @@ public class CommentService {
 
         if (commentOptional.isPresent()) {
             Comment comment = commentOptional.get();
-            commentRepository.delete(comment);
+
+            comment.setDeleted(true);
+            comment.setDeletedAt(LocalDateTime.now());
+            commentRepository.save(comment);
+
             CommentDeleteResponseDto responseDto = new CommentDeleteResponseDto(200, "댓글이 성공적으로 삭제되었습니다.");
             return responseDto;
         } else {

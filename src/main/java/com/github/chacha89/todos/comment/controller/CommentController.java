@@ -5,6 +5,8 @@ import com.github.chacha89.todos.comment.dto.CommentCreateResponseDto;
 import com.github.chacha89.todos.comment.dto.CommentDeleteResponseDto;
 import com.github.chacha89.todos.comment.dto.CommentData;
 import com.github.chacha89.todos.comment.service.CommentService;
+import com.github.chacha89.todos.jwt.service.JWTService;
+import io.jsonwebtoken.Claims;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,27 +17,36 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/comments")
 public class CommentController {
     private final CommentService commentService;
+    private final JWTService jwtService;
 
-    public CommentController(CommentService commentService) {
+    public CommentController(CommentService commentService, JWTService jwtService) {
         this.commentService = commentService;
+        this.jwtService = jwtService;
     }
 
     /**
      * 커멘트 생성 API
      */
     @PostMapping
-    public ResponseEntity<CommentCreateResponseDto> createCommentAPI(@RequestBody CommentCreateRequestDto requestDto) {
-        CommentCreateResponseDto responseDto = commentService.createCommentAPI(requestDto);
+    public ResponseEntity<CommentCreateResponseDto> createCommentAPI(
+            @RequestHeader("Authorization") String bearerToken,
+            @RequestBody CommentCreateRequestDto requestDto
+    ) {
+        String token = bearerToken.replace("Bearer ", "").trim();
+        Claims claims = jwtService.verifyToken(token);
+        Long userId = Long.parseLong(claims.getSubject());
+        CommentCreateResponseDto responseDto = commentService.createCommentAPI(userId, requestDto);
         return ResponseEntity.ok(responseDto);
     }
 
     /**
      * 커멘트 삭제 API
-     * @param commentId
+     * @param id
      * @return
      */
-    public ResponseEntity<CommentDeleteResponseDto> deleteCommentAPI(@PathVariable Long commentId) {
-        CommentDeleteResponseDto responseDto = commentService.deleteCommentService(commentId);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CommentDeleteResponseDto> deleteCommentAPI(@PathVariable Long id) {
+        CommentDeleteResponseDto responseDto = commentService.deleteCommentService(id);
         if (responseDto.getStatus() == 404) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDto);
         } else {
