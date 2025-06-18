@@ -3,6 +3,7 @@ package com.github.chacha89.todos.comment.service;
 import com.github.chacha89.todos.comment.dto.CommentCreateRequestDto;
 import com.github.chacha89.todos.comment.dto.CommentCreateResponseDto;
 import com.github.chacha89.todos.comment.dto.CommentData;
+import com.github.chacha89.todos.comment.dto.CommentDeleteResponseDto;
 import com.github.chacha89.todos.comment.entity.Comment;
 import com.github.chacha89.todos.comment.repository.CommentRepository;
 import com.github.chacha89.todos.exception.CommentCreateException;
@@ -13,6 +14,7 @@ import com.github.chacha89.todos.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class CommentService {
@@ -63,5 +65,25 @@ public class CommentService {
 
         // 7. 반환
         return new CommentCreateResponseDto(true, 200, newCommentData);
+    }
+
+    /**
+     * 커멘트 삭제 기능
+     * @param commentId
+     * @return
+     */
+    public CommentDeleteResponseDto deleteCommentService(Long commentId) {
+        // 데이터 준비
+        Optional<Comment> commentOptional = commentRepository.findById(commentId);
+
+        if (commentOptional.isPresent()) {
+            Comment comment = commentOptional.get();
+            commentRepository.delete(comment);
+            CommentDeleteResponseDto responseDto = new CommentDeleteResponseDto(200, "댓글이 성공적으로 삭제되었습니다.");
+            return responseDto;
+        } else {
+            CommentDeleteResponseDto responseDto = new CommentDeleteResponseDto(404, "댓글이 존재하지 않습니다.");
+            return responseDto;
+        }
     }
 }
