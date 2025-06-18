@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -220,6 +221,12 @@ public class TodoService {
         return updateTodoResponse;
     }
 
+    /**
+     * 할 일 삭제 기능
+     * @param todoId
+     * @return
+     */
+    @Transactional
     public TodoDeleteResponseDto deleteToService(Long todoId) {
 
         // 데이터 준비
@@ -228,11 +235,23 @@ public class TodoService {
         // 검증 로직
         if (todoOptional.isPresent()) {
             Todo todo = todoOptional.get();
-            todoRepository.delete(todo);
-            TodoDeleteResponseDto responseDto = new TodoDeleteResponseDto(200, "댓글이 성공적으로 삭제되었습니다.");
+
+            if (todo.getIsDeleted()) {
+                return new TodoDeleteResponseDto(400, "이미 삭제된 할 일입니다.");
+            }
+
+            todo.setDeleted(true);
+
+            todo.setDeletedAt(LocalDateTime.now());
+
+            todoRepository.save(todo);
+
+            TodoDeleteResponseDto responseDto = new TodoDeleteResponseDto(200, "할 일이 성공적으로 삭제되었습니다.");
             return responseDto;
+
         } else {
-            TodoDeleteResponseDto responseDto = new TodoDeleteResponseDto(404, "댓글이 존재하지 않습니다.");
+
+            TodoDeleteResponseDto responseDto = new TodoDeleteResponseDto(404, "할 일이 존재하지 않습니다.");
             return responseDto;
         }
 
