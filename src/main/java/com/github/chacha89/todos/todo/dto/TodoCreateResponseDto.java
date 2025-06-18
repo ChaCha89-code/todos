@@ -1,7 +1,5 @@
 package com.github.chacha89.todos.todo.dto;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -40,10 +38,6 @@ public class TodoCreateResponseDto {
 
     public String getTodoContents() {
         return todoContents;
-    }
-
-    public Long getUserId() {
-        return userId;
     }
 
     public String getAssignee() {

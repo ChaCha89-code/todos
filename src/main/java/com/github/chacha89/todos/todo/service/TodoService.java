@@ -4,6 +4,10 @@ import com.github.chacha89.todos.exception.TodoCreateException;
 import com.github.chacha89.todos.todo.dto.TodoCreateRequestDto;
 import com.github.chacha89.todos.todo.dto.TodoCreateResponseDto;
 import com.github.chacha89.todos.todo.dto.response.dto.dto.response.GetTodoListResponseDto;
+import com.github.chacha89.todos.todo.dto.TodoDeleteResponseDto;
+import com.github.chacha89.todos.todo.dto.UpdateTodoRequestDto;
+import com.github.chacha89.todos.todo.entity.Priority;
+import com.github.chacha89.todos.todo.entity.Progress;
 import com.github.chacha89.todos.todo.entity.Todo;
 import com.github.chacha89.todos.todo.repository.TodoRepository;
 import com.github.chacha89.todos.user.entity.User;
@@ -25,6 +29,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -42,10 +47,9 @@ public class TodoService {
     }
 
     @Transactional
-    public TodoCreateResponseDto createTodoService(TodoCreateRequestDto requestDto) {
+    public TodoCreateResponseDto createTodoService(Long userId, TodoCreateRequestDto requestDto) {
 
         // 1. 데이터 준비
-        Long userId = requestDto.getUserId();
         String title = requestDto.getTitle();
         MultipartFile image = requestDto.getImage();
         String todoContents = requestDto.getTodoContents();
@@ -73,19 +77,21 @@ public class TodoService {
 
         }
 
-        if (title.isBlank() || title == null
+        // 예외 처리
+        if(title.isBlank() || title == null
                 || todoContents.isBlank() || todoContents == null
                 || assignee.isBlank() || assignee == null
                 || priority.isBlank() || priority == null
                 || progress.isBlank() || progress == null
-                || dueDate.isBefore(LocalDate.now())) {
+                || dueDate.isBefore(LocalDate.now()))
+        {
             throw new TodoCreateException(400, "필수 항목 중 빈 항목이 있거나 마감일이 잘못 설정되었습니다. 다시 확인해주세요.");
         }
 
         User foundUser = userRepository.findById(userId).
-                orElseThrow(() -> new TodoCreateException(404, "존재하지 않는 사용자입니다."));
+                orElseThrow(() -> new TodoCreateException(404, "사용자ID가 존재하지 않습니다."));
 
-        Todo newTodo = new Todo(foundUser, title, url, todoContents, assignee, priority, progress, dueDate);
+        Todo newTodo = new Todo(foundUser, assignee, title,  url, todoContents, priority, progress, dueDate);
 
         Todo savedTodo = todoRepository.save(newTodo);
 
@@ -104,6 +110,108 @@ public class TodoService {
 
     }
 
+    /**
+     * 수정
+     */
+    public UpdateTodoRequestDto updateTodoAPI(Long id, UpdateTodoRequestDto updateRequestDto ){
+        //1. 데이터 준비
+        Todo todo = todoRepository.findById(id).orElseThrow();
+
+
+        String newTitle = updateRequestDto.getTitle();
+        String newContents = updateRequestDto.getContents();
+        String newAssignee = updateRequestDto.getAssignee();
+        String newPriority = updateRequestDto.getPriority();
+        String newProgress = updateRequestDto.getProgress();
+        String newImage = updateRequestDto.getImage();
+
+
+        //2. 변경 -> null이 아니면  변경
+
+        //제목변경
+        if (!(newTitle==null) && !newTitle.isBlank()){
+            todo.changeTitle(newTitle);
+        }
+        //내용변경
+        if (!(newContents==null) && !newContents.isBlank()){
+            todo.changeContent(newContents);
+        }
+        //담당자 변경
+        if (!(newAssignee==null) && !newAssignee.isBlank()){
+            todo.changeAssignee(newAssignee);
+        }
+        //이미지 변경
+        if (!(newImage==null) && !newImage.isBlank()){
+            todo.changeImage(newImage);
+        }
+        //우선순위 변경
+        Priority priority = Priority.Low;
+        if (!(newPriority==null) && !newPriority.isBlank()){
+            //받아온 값이 enum 인지 체크
+            if (priority.isEnum(newPriority)){
+                //newPrioriy가 더 높은 단계의 enum 값이면 변경
+                if(Priority.valueOf(newPriority).getLevel() > Priority.valueOf(todo.getPriority()).getLevel()){
+                    todo.changePriority(newPriority);
+
+                }else{
+                    throw new TodoCreateException(400, "이전 단계로 돌아갈 수 없습니다.");
+                }
+            }
+        }
+        //진행상황 변경
+        if (!(newProgress==null) && !newProgress.isBlank()){
+            //enum체크
+            Progress progress = Progress.NotStarted;
+            //받아온 값이 enum 인지 체크
+            if (progress.isEnum(newProgress)){
+                //newPrioriy가 더 높은 단계의 enum 값이면 변경
+                if(Progress.valueOf(newProgress).getSteps() > Progress.valueOf(todo.getProgress()).getSteps()){
+                    todo.changePriority(newProgress);
+
+                }else{
+                    throw new TodoCreateException(400, "이전 단계로 돌아갈 수 없습니다.");
+                }
+            }
+        }
+
+        Todo updatedTodo = todoRepository.save(todo);
+
+        UpdateTodoRequestDto updateTodoResponse = UpdateTodoRequestDto.builder()
+                .title(updatedTodo.getTitle())
+                .image(updatedTodo.getImage())
+                .assignee(updatedTodo.getAssignee())
+                .contents(updatedTodo.getContent())
+                .priority(updatedTodo.getPriority())
+                .progress(updatedTodo.getProgress())
+                .build();
+
+        return updateTodoResponse;
+    }
+
+
+
+
+
+
+
+    public TodoDeleteResponseDto deleteToService(Long todoId) {
+
+        // 데이터 준비
+        Optional<Todo> todoOptional = todoRepository.findById(todoId);
+
+        // 검증 로직
+        if (todoOptional.isPresent()) {
+            Todo todo= todoOptional.get();
+            todoRepository.delete(todo);
+            TodoDeleteResponseDto responseDto= new TodoDeleteResponseDto(200, "댓글이 성공적으로 삭제되었습니다.");
+            return responseDto;
+        } else {
+            TodoDeleteResponseDto responseDto = new TodoDeleteResponseDto(404, "댓글이 존재하지 않습니다.");
+            return responseDto;
+        }
+
+
+    }
     @Transactional
     public List<GetTodoListResponseDto> getTodoListService(String progress, String username,int page, int size) {
         // 데이터 준비

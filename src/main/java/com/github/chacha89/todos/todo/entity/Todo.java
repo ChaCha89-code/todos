@@ -1,16 +1,15 @@
 package com.github.chacha89.todos.todo.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.chacha89.todos.user.entity.User;
 import jakarta.persistence.*;
-import lombok.ToString;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-@ToString
+
 @Entity
 @Table(name = "todos")
 @EntityListeners(AuditingEntityListener.class)
@@ -29,7 +28,8 @@ public class Todo {
     @Column(name = "assignee", nullable = false, length = 50)
     private String assignee;
 
-    @Column(name = "title", nullable = false, length = 50)
+    @Column(name = "title", nullable = false, length = 150)
+    @Size(max = 50, message = "제목은 최대 50자까지 입력 가능합니다.")
     private String title;
 
     @Column(name = "image")
@@ -57,7 +57,6 @@ public class Todo {
 
     @Column
     private LocalDate dueDate;
-
 
 
     // 생성자
@@ -124,6 +123,29 @@ public class Todo {
         return dueDate;
     }
 
+    public void changeAssignee(String assignee) {
+        this.assignee = assignee;
+    }
+
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    public void changeImage(String image) {
+        this.image = image;
+    }
+
+    public void changeContent(String content) {
+        this.content = content;
+    }
+
+    public void changePriority(String priority) {
+        this.priority = priority;
+    }
+
+    public void changeProgress(String progress) {
+        this.progress = progress;
+    }
 }
 
 // 만약 assignee도 실제 회원(User)라면 User 타입으로 맵핑하는 것이 더 강력하고 안전합니다
