@@ -22,7 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     FilterRegistrationBean<Filter> addJWTFilter(BlacklistTokenRepository blacklistTokenRepository) {
         FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
-        filterFilterRegistrationBean.setFilter(new JWTFilter(jwtService));
+        filterFilterRegistrationBean.setFilter(new JWTFilter(jwtService, blacklistTokenRepository));
         filterFilterRegistrationBean.setDispatcherTypes(DispatcherType.REQUEST);
         filterFilterRegistrationBean.addUrlPatterns("/*");
         return filterFilterRegistrationBean;

@@ -1,5 +1,7 @@
 package com.github.chacha89.todos.todo.dto.response.dto.dto.response;
 
+import com.github.chacha89.todos.todo.entity.Priority;
+import com.github.chacha89.todos.todo.entity.Progress;
 import com.github.chacha89.todos.todo.entity.Todo;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,8 +16,8 @@ public class TodoDetailResponseDto {
     private String image;
     private String content;
     private String assignee;
-    private String priority;
-    private String progress;
+    private Priority priority;
+    private Progress progress;
     private LocalDate dueDate;
 
     public TodoDetailResponseDto(
@@ -24,8 +26,8 @@ public class TodoDetailResponseDto {
             String image,
             String content,
             String assignee,
-            String priority,
-            String progress,
+            Priority priority,
+            Progress progress,
             LocalDate dueDate
     ) {
         this.userId = userId;
