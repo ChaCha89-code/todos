@@ -48,12 +48,16 @@ public class TodoController {
         TodoCreateResponseDto responseDto = todoService.createTodoService(userId, requestDto);
         return ResponseEntity.ok(responseDto);
     }
+    // todo 조회
+    // 토큰 적용 추후 추가
     @GetMapping
     public ResponseEntity<List<GetTodoListResponseDto>> getTodoListAPI(@RequestParam String progress,
                                                                        @RequestParam String username,
                                                                        @RequestParam(defaultValue = "0") int page,
-                                                                       @RequestParam(defaultValue = "10") int size) {
-        List<GetTodoListResponseDto> todoListService = todoService.getTodoListService(progress,username,page,size);
+                                                                       @RequestParam(defaultValue = "10") int size,
+                                                                       @RequestParam(required = false) String search) {
+        List<GetTodoListResponseDto> todoListService
+                = todoService.getTodoListService(progress,username,page,size,search);
         ResponseEntity<List<GetTodoListResponseDto>> responseEntity
                 = new ResponseEntity<>(todoListService, HttpStatus.OK);
         return responseEntity;

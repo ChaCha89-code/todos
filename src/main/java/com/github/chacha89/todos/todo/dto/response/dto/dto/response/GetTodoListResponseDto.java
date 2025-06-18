@@ -2,7 +2,7 @@ package com.github.chacha89.todos.todo.dto.response.dto.dto.response;
 
 
 import com.github.chacha89.todos.todo.entity.Todo;
-import com.github.chacha89.todos.todo.progressStatus.Progress;
+import com.github.chacha89.todos.todo.progressStatus.ProgressStatus;
 import lombok.ToString;
 
 
@@ -11,39 +11,39 @@ import java.time.LocalDateTime;
 
 @ToString
 public class GetTodoListResponseDto {
-    private final Progress progress;
+    private final ProgressStatus progressStatus;
     private final String message;
     public TodoList todoList;
-    public OnProgressList onProgress;
+    public OnProgressList inProgress;
     public DoneList done;
     public OverdueList overdue;
 
     public GetTodoListResponseDto(TodoList todoList) {
-        this.progress = Progress.TODO;
+        this.progressStatus = ProgressStatus.TODO;
         this.message = "성공";
         this.todoList = todoList;
     }
 
-    public GetTodoListResponseDto(OnProgressList onProgress) {
-        this.progress = Progress.ONPROGRESS;
+    public GetTodoListResponseDto(OnProgressList inProgress) {
+        this.progressStatus = ProgressStatus.INPROGRESS;
         this.message = "성공";
-        this.onProgress = onProgress;
+        this.inProgress = inProgress;
     }
 
     public GetTodoListResponseDto(DoneList done) {
-        this.progress = Progress.DONE;
+        this.progressStatus = ProgressStatus.DONE;
         this.message = "성공";
         this.done = done;
     }
 
     public GetTodoListResponseDto(OverdueList overdue) {
-        this.progress = Progress.OVERDUE;
+        this.progressStatus = ProgressStatus.OVERDUE;
         this.message = "성공";
         this.overdue = overdue;
     }
 
-    public Progress getProgress() {
-        return progress;
+    public ProgressStatus getProgressStatus() {
+        return progressStatus;
     }
 
     public String getMessage() {
