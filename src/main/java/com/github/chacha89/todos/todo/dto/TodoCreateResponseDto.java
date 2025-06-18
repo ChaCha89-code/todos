@@ -9,6 +9,7 @@ public class TodoCreateResponseDto {
     private String image;
     private String todoContents;
     private Long userId;
+    private Long todoId;
     private String assignee;
     private String priority;
     private String progress;
@@ -17,11 +18,12 @@ public class TodoCreateResponseDto {
     private LocalDateTime updatedAt;
 
     // 생성자
-    public TodoCreateResponseDto(String title, String image, String todoContents, Long userId, String assignee, String priority, String progress, LocalDate dueDate, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public TodoCreateResponseDto(String title, String image, String todoContents, Long userId, Long todoId, String assignee, String priority, String progress, LocalDate dueDate, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.title = title;
         this.image = image;
         this.todoContents = todoContents;
         this.userId = userId;
+        this.todoId = todoId;
         this.assignee = assignee;
         this.priority = priority;
         this.progress = progress;
@@ -39,6 +41,8 @@ public class TodoCreateResponseDto {
     public String getTodoContents() { return todoContents; }
 
     public Long getUserId() { return userId; }
+
+    public Long getTodoId() { return todoId;}
 
     public String getAssignee() {
         return assignee;
