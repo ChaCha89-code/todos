@@ -1,5 +1,6 @@
 package com.github.chacha89.todos.user.controller;
 
+import com.github.chacha89.todos.jwt.service.JWTService;
 import com.github.chacha89.todos.user.dto.requestDto.UserCreateRequestDto;
 import com.github.chacha89.todos.user.dto.requestDto.UserUpdateRequestDto;
 import com.github.chacha89.todos.user.dto.responseDto.APIResponse;
