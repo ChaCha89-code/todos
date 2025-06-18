@@ -4,11 +4,11 @@ package com.github.chacha89.todos.security.filter;
 
 
 import com.github.chacha89.todos.jwt.service.JWTService;
+import com.github.chacha89.todos.logout.repository.BlacklistTokenRepository;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.util.PatternMatchUtils;
 
 
@@ -21,8 +21,11 @@ import java.util.Arrays;
 public class JWTFilter implements Filter {
     private final JWTService jwtService;
 
-    public JWTFilter(JWTService jwtService) {
+    private final BlacklistTokenRepository blacklistTokenRepository;
+
+    public JWTFilter(JWTService jwtService, BlacklistTokenRepository blacklistTokenRepository) {
         this.jwtService = jwtService;
+        this.blacklistTokenRepository = blacklistTokenRepository;
     }
 
     private static final String[] WHITE_lIST = {"/teams", "/users", "/auth/login","/todos/"};
@@ -50,9 +53,11 @@ public class JWTFilter implements Filter {
             return;
         }
 
-
-        // 토큰 인증 로직
         String token = bearJWTToken.substring(7);
+
+        if (blacklistTokenRepository.existsByToken(token)) {
+            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "로그아웃된 토큰입니다.");
+        }
 
         try {
             log.info("token: {}", token);
