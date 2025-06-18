@@ -77,5 +77,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<CommentCreateErrorResponseDto> handleCommentCreateException(CommentCreateException e) {
         return ResponseEntity.status(e.getStatus()).body(new CommentCreateErrorResponseDto(e.getStatus(), e.getMessage()));
     }
-
+    @ExceptionHandler(MissingSearchTermException.class)
+    public ResponseEntity<APIErrorResponseDto> handleMissingSearchTermException(MissingSearchTermException e)
+    {
+        APIErrorResponseDto MissingSearchTermResponse
+                = APIErrorResponseDto.errorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+        ResponseEntity<APIErrorResponseDto> MissingSearchTermExceptionResponse
+                = new ResponseEntity<>(MissingSearchTermResponse, HttpStatus.BAD_REQUEST);
+        return MissingSearchTermExceptionResponse;
+    }
 }

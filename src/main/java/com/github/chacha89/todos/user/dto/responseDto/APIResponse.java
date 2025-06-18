@@ -18,7 +18,7 @@ public class APIResponse<T> {
     private T data;
 
 
-    public APIResponse(boolean success, int status, String message, T data) {
+    private APIResponse(boolean success, int status, String message, T data) {
         this.success = success;
         this.status = status;
         this.message = message;

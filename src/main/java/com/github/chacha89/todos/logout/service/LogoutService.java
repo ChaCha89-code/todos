@@ -32,6 +32,7 @@ public class LogoutService {
         log.info("token: {}", token);
         BlacklistToken blacklistToken = new BlacklistToken(token);
         BlacklistToken saved = blacklistTokenRepository.save(blacklistToken);
+
     }
 
 }
