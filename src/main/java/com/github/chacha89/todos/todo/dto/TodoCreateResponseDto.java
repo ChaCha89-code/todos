@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class TodoCreateResponseDto {
+    // 속성
     private String title;
     private String image;
     private String todoContents;
@@ -15,6 +16,7 @@ public class TodoCreateResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    // 생성자
     public TodoCreateResponseDto(String title, String image, String todoContents, Long userId, String assignee, String priority, String progress, LocalDate dueDate, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.title = title;
         this.image = image;
@@ -28,17 +30,15 @@ public class TodoCreateResponseDto {
         this.updatedAt = updatedAt;
     }
 
-    public String getTitle() {
-        return title;
-    }
 
-    public String getImage() {
-        return image;
-    }
+    // 기능
+    public String getTitle() { return title; }
 
-    public String getTodoContents() {
-        return todoContents;
-    }
+    public String getImage() { return image; }
+
+    public String getTodoContents() { return todoContents; }
+
+    public Long getUserId() { return userId; }
 
     public String getAssignee() {
         return assignee;
