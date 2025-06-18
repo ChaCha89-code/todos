@@ -73,7 +73,7 @@ public class TodoService {
         }
 
         User foundUser = userRepository.findById(userId).
-                orElseThrow(() -> new TodoCreateException(404, "존재하지 않는 사용자입니다."));
+                orElseThrow(() -> new TodoCreateException(404, "사용자ID가 존재하지 않습니다."));
 
         Todo newTodo = new Todo(foundUser, title, url, todoContents, assignee, priority, progress, dueDate);
 
