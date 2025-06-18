@@ -1,15 +1,18 @@
 package com.github.chacha89.todos.todo.service;
 
 import com.github.chacha89.todos.exception.TodoCreateException;
+import com.github.chacha89.todos.exception.UserIdNotFoundException;
 import com.github.chacha89.todos.todo.dto.TodoCreateRequestDto;
 import com.github.chacha89.todos.todo.dto.TodoCreateResponseDto;
 import com.github.chacha89.todos.todo.dto.TodoDeleteResponseDto;
+import com.github.chacha89.todos.todo.dto.response.dto.dto.response.TodoDetailResponseDto;
 import com.github.chacha89.todos.todo.entity.Todo;
 import com.github.chacha89.todos.todo.repository.TodoRepository;
 import com.github.chacha89.todos.user.entity.User;
 import com.github.chacha89.todos.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -94,6 +97,21 @@ public class TodoService {
                 savedTodo.getUpdatedAt()
         );
 
+    }
+// 할일 단건 조회기능
+    public TodoDetailResponseDto findById(Long todoId) {
+        Todo todo = todoRepository.findById(todoId)
+                .orElseThrow(() -> new UserIdNotFoundException(HttpStatus.NOT_FOUND));
+        return new TodoDetailResponseDto(
+                todo.getId(),
+                todo.getTitle(),
+                todo.getImage(),
+                todo.getContent(),
+                todo.getAssignee(),
+                todo.getPriority(),
+                todo.getProgress(),
+                todo.getDueDate()
+        );
     }
 
     public TodoDeleteResponseDto deleteToService(Long todoId) {

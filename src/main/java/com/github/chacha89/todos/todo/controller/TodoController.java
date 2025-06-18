@@ -3,6 +3,7 @@ package com.github.chacha89.todos.todo.controller;
 import com.github.chacha89.todos.todo.dto.TodoCreateRequestDto;
 import com.github.chacha89.todos.todo.dto.TodoCreateResponseDto;
 import com.github.chacha89.todos.todo.dto.TodoDeleteResponseDto;
+import com.github.chacha89.todos.todo.dto.response.dto.dto.response.TodoDetailResponseDto;
 import com.github.chacha89.todos.todo.service.TodoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,13 @@ public class TodoController {
         TodoCreateResponseDto responseDto = todoService.createTodoService(requestDto);
         return ResponseEntity.ok(responseDto);
     }
+
+    @GetMapping("/{todoId}")
+    public ResponseEntity<TodoDetailResponseDto> detailTodoAPI(@PathVariable Long todoId) {
+        TodoDetailResponseDto responseDto = todoService.findById(todoId);
+        return ResponseEntity.ok(responseDto);
+    }
+
 
     @DeleteMapping("/{todoId}")
     public ResponseEntity<TodoDeleteResponseDto> deleteTodoAPI(@PathVariable Long todoId) {
