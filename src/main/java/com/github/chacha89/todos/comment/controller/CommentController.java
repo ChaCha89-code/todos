@@ -1,8 +1,13 @@
 package com.github.chacha89.todos.comment.controller;
 
 import com.github.chacha89.todos.comment.dto.CommentCreateRequestDto;
+import com.github.chacha89.todos.comment.dto.CommentCreateResponseDto;
+import com.github.chacha89.todos.comment.dto.CommentDeleteResponseDto;
 import com.github.chacha89.todos.comment.dto.CommentData;
 import com.github.chacha89.todos.comment.service.CommentService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import com.github.chacha89.todos.user.dto.responseDto.APIResponse;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +24,23 @@ public class CommentController {
      * 커멘트 생성 API
      */
     @PostMapping
-    public void createCommentAPI(@RequestBody CommentCreateRequestDto requestDto) {
-        // commentService.
+    public ResponseEntity<CommentCreateResponseDto> createCommentAPI(@RequestBody CommentCreateRequestDto requestDto) {
+        CommentCreateResponseDto responseDto = commentService.createCommentAPI(requestDto);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    /**
+     * 커멘트 삭제 API
+     * @param commentId
+     * @return
+     */
+    public ResponseEntity<CommentDeleteResponseDto> deleteCommentAPI(@PathVariable Long commentId) {
+        CommentDeleteResponseDto responseDto = commentService.deleteCommentService(commentId);
+        if (responseDto.getStatus() == 404) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDto);
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+        }
     }
 
 

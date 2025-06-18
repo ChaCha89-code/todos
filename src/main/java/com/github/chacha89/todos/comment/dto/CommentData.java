@@ -12,12 +12,12 @@ public class CommentData {
     private String comment;
     private LocalDateTime createdAt;
 
-    public CommentData(Long id, Long userId, Long todoId, String comment, LocalDateTime createAt) {
+    public CommentData(Long id, Long userId, Long todoId, String comment, LocalDateTime createdAt) {
         this.id = id;
         this.userId = userId;
         this.todoId = todoId;
         this.comment = comment;
-        this.createdAt = createAt;
+        this.createdAt = createdAt;
     }
 
     public Long getId() {

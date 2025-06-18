@@ -3,6 +3,7 @@ package com.github.chacha89.todos.todo.service;
 import com.github.chacha89.todos.exception.TodoCreateException;
 import com.github.chacha89.todos.todo.dto.TodoCreateRequestDto;
 import com.github.chacha89.todos.todo.dto.TodoCreateResponseDto;
+import com.github.chacha89.todos.todo.dto.TodoDeleteResponseDto;
 import com.github.chacha89.todos.todo.dto.UpdateTodoRequestDto;
 import com.github.chacha89.todos.todo.entity.Priority;
 import com.github.chacha89.todos.todo.entity.Progress;
@@ -140,6 +141,9 @@ public class TodoService {
                 //newPrioriy가 더 높은 단계의 enum 값이면 변경
                 if(Priority.valueOf(newPriority).getLevel() > Priority.valueOf(todo.getPriority()).getLevel()){
                     todo.changePriority(newPriority);
+
+                }else{
+                    throw new TodoCreateException(400, "이전 단계로 돌아갈 수 없습니다.");
                 }
             }
         }
@@ -152,6 +156,9 @@ public class TodoService {
                 //newPrioriy가 더 높은 단계의 enum 값이면 변경
                 if(Progress.valueOf(newProgress).getSteps() > Progress.valueOf(todo.getProgress()).getSteps()){
                     todo.changePriority(newProgress);
+
+                }else{
+                    throw new TodoCreateException(400, "이전 단계로 돌아갈 수 없습니다.");
                 }
             }
         }
@@ -176,5 +183,23 @@ public class TodoService {
 
 
 
+    public TodoDeleteResponseDto deleteToService(Long todoId) {
+
+        // 데이터 준비
+        Optional<Todo> todoOptional = todoRepository.findById(todoId);
+
+        // 검증 로직
+        if (todoOptional.isPresent()) {
+            Todo todo= todoOptional.get();
+            todoRepository.delete(todo);
+            TodoDeleteResponseDto responseDto= new TodoDeleteResponseDto(200, "댓글이 성공적으로 삭제되었습니다.");
+            return responseDto;
+        } else {
+            TodoDeleteResponseDto responseDto = new TodoDeleteResponseDto(404, "댓글이 존재하지 않습니다.");
+            return responseDto;
+        }
+
+
+    }
 
 }
