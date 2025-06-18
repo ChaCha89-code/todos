@@ -25,7 +25,7 @@ public class JWTFilter implements Filter {
         this.jwtService = jwtService;
     }
 
-    private static final String[] WHITE_lIST = {"/teams", "/users", "/auth/login","/todos/**"};
+    private static final String[] WHITE_lIST = {"/teams", "/users", "/auth/login","/todos/"};
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
@@ -73,6 +73,7 @@ public class JWTFilter implements Filter {
     public boolean isWhiteList(String requestURI) {
 
         boolean simpleMatch = PatternMatchUtils.simpleMatch(WHITE_lIST, requestURI);
+        //.simpleMatch 정규표현식이냐 문자열표현이냐
         log.info("WHITE_LIST {} requsetURI {}", WHITE_lIST,requestURI);
         log.info("simpleMatch {}", simpleMatch);
         return simpleMatch;

@@ -9,7 +9,11 @@ import com.github.chacha89.todos.todo.repository.TodoRepository;
 import com.github.chacha89.todos.user.entity.User;
 import com.github.chacha89.todos.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,10 +23,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class TodoService {
     private final TodoRepository todoRepository;
@@ -67,13 +73,12 @@ public class TodoService {
 
         }
 
-        if(title.isBlank() || title == null
+        if (title.isBlank() || title == null
                 || todoContents.isBlank() || todoContents == null
                 || assignee.isBlank() || assignee == null
                 || priority.isBlank() || priority == null
                 || progress.isBlank() || progress == null
-                || dueDate.isBefore(LocalDate.now()))
-        {
+                || dueDate.isBefore(LocalDate.now())) {
             throw new TodoCreateException(400, "필수 항목 중 빈 항목이 있거나 마감일이 잘못 설정되었습니다. 다시 확인해주세요.");
         }
 
@@ -98,18 +103,49 @@ public class TodoService {
         );
 
     }
+
     @Transactional
-    public List<GetTodoListResponseDto> getTodoListService() {
+    public List<GetTodoListResponseDto> getTodoListService(String progress, String username,int page, int size) {
         // 데이터 준비
-        List<Todo> todoListFindAll = todoRepository.findAll();
+        Pageable pageable = PageRequest.of(page , size);
+        Page<Todo> progressPage = todoRepository.findByProgressAndUser_UserNameOrderByUpdatedAtDesc(progress, username, pageable);
+
         // 컬렉션 리스트로 만들 깡통 준비
         List<GetTodoListResponseDto> todoDtoList = new ArrayList<>();
-        // 리스트 완성
-        List<GetTodoListResponseDto> responseDtoList = todoListFindAll.stream()
-                .map(todoList -> new GetTodoListResponseDto(todoDtoList))
-                .collect(Collectors.toList());
+        // @Param progress = todo, onprogress, done, overdue 에 맞춰 데이터 반환
+        switch (progress) {
+            case "todo":
+                for (Todo todo : progressPage) {
+                    GetTodoListResponseDto todoList
+                            = new GetTodoListResponseDto(new GetTodoListResponseDto.TodoList(todo));
+                    todoDtoList.add(todoList);
+                }
+                break;
+            case "onprogress":
+                for (Todo todo : progressPage) {
+                    GetTodoListResponseDto todoList
+                            = new GetTodoListResponseDto(new GetTodoListResponseDto.OnProgressList(todo));
+                    todoDtoList.add(todoList);
+                }
+                break;
+            case "done":
+                for (Todo todo : progressPage) {
+                    GetTodoListResponseDto todoList
+                            = new GetTodoListResponseDto(new GetTodoListResponseDto.DoneList(todo));
+                    todoDtoList.add(todoList);
+                }
+                break;
+            case "overdue":
+                for (Todo todo : progressPage) {
+                    GetTodoListResponseDto todoList
+                            = new GetTodoListResponseDto(new GetTodoListResponseDto.OverdueList(todo));
+                    todoDtoList.add(todoList);
+                }
+                break;
+        }
 
-        return responseDtoList;
+        log.info("responseDtoList: {}", todoDtoList);
+        return todoDtoList;
 
     }
 

@@ -1,14 +1,16 @@
 package com.github.chacha89.todos.todo.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.chacha89.todos.user.entity.User;
 import jakarta.persistence.*;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
+@ToString
 @Entity
 @Table(name = "todos")
 @EntityListeners(AuditingEntityListener.class)
@@ -19,7 +21,7 @@ public class Todo {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -55,6 +57,7 @@ public class Todo {
 
     @Column
     private LocalDate dueDate;
+
 
 
     // 생성자
