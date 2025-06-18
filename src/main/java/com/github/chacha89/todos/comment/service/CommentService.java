@@ -77,7 +77,11 @@ public class CommentService {
 
         if (commentOptional.isPresent()) {
             Comment comment = commentOptional.get();
-            commentRepository.delete(comment);
+
+            comment.setDeleted(true);
+            comment.setDeletedAt(LocalDateTime.now());
+            commentRepository.save(comment);
+
             CommentDeleteResponseDto responseDto = new CommentDeleteResponseDto(200, "댓글이 성공적으로 삭제되었습니다.");
             return responseDto;
         } else {

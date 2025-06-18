@@ -33,7 +33,12 @@ public class Comment {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    // 기능
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted = false;
+
+    private LocalDateTime deletedAt;
+
+    // 생성자
     public Comment() {}
 
     public Comment(User user, Todo todo, String comment) {
@@ -42,6 +47,7 @@ public class Comment {
         this.comment = comment;
     }
 
+    // 기능
     public Long getId() {
         return id;
     }
@@ -64,5 +70,13 @@ public class Comment {
 
     public void changeComment(String comment) {
         this.comment = comment;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
     }
 }
