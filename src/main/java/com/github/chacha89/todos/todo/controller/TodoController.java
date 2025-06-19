@@ -7,7 +7,9 @@ import com.github.chacha89.todos.todo.dto.response.dto.dto.response.GetTodoListR
 import com.github.chacha89.todos.todo.dto.UpdateTodoRequestDto;
 import com.github.chacha89.todos.todo.dto.TodoDeleteResponseDto;
 import com.github.chacha89.todos.todo.dto.response.dto.dto.response.TodoDetailResponseDto;
+import com.github.chacha89.todos.todo.entity.Priority;
 import com.github.chacha89.todos.todo.entity.Progress;
+import com.github.chacha89.todos.todo.entity.Todo;
 import com.github.chacha89.todos.todo.service.TodoService;
 import com.github.chacha89.todos.user.service.UserService;
 import org.apache.coyote.Response;
@@ -22,6 +24,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -139,6 +143,12 @@ public class TodoController {
     public ResponseEntity<String> getCompletedPercent(){
         double progressPercent = todoService.getProgressPercent();
         return ResponseEntity.ok("완료율은 다음과 같습니다. : " + progressPercent+"%");
+    }
+
+    @GetMapping("/taskSummary")
+    public ResponseEntity<Map<Priority, List<Todo>>> getTodoSummary(){
+        Map<Priority, List<Todo>> todoSummary = todoService.getTodoSummary();
+        return ResponseEntity.ok( todoSummary);
     }
 
 }

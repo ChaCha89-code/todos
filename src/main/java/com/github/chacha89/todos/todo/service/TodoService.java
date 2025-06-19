@@ -25,6 +25,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Files;
@@ -379,6 +380,37 @@ public class TodoService {
         double result = (double) doneNumber / totalNumber * 100;
         return result;
     }
+
+    /**
+     * 대시보드 태스크 요약
+     */
+    public Map <Priority, List <Todo>> getTodoSummary(){
+
+        List<Todo> todos = todoRepository.findAll();
+
+        // 우선순위 Enum 배열을 내림차순 정렬
+        Priority[] priorities = Priority.values();
+        Arrays.sort(priorities, (a, b) -> b.getLevel() - a.getLevel());
+
+        Map<Priority, List<Todo>> groupedMap = new LinkedHashMap<>();
+
+        for (Priority priority : priorities) {
+            List<Todo> filtered = new ArrayList<>();
+
+            for (Todo todo : todos) {
+                if (todo.getPriority() == priority) {
+                    filtered.add(todo);
+                }
+            }
+
+            // 마감일 오름차순 정렬
+            filtered.sort(Comparator.comparing(Todo::getDueDate));
+            groupedMap.put(priority, filtered);
+        }
+
+        return groupedMap;
+    }
+
 
 
 }
