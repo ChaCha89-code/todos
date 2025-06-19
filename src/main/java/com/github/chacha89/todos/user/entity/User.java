@@ -45,7 +45,7 @@ public class User {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-
+    @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
 
     public void delete() {
@@ -104,5 +104,9 @@ public class User {
 
     public void changeUserImage(String userImage) {
         this.userImage = userImage;
+    }
+
+    public boolean getDeleted(){
+        return this.deleted;
     }
 }

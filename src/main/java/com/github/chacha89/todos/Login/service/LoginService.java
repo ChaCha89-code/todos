@@ -4,6 +4,7 @@ import com.github.chacha89.todos.Login.dto.requestDto.LoginRequestDto;
 import com.github.chacha89.todos.Login.dto.responseDto.LoginResponseDto;
 import com.github.chacha89.todos.exception.LoginEmailNotFoundException;
 import com.github.chacha89.todos.exception.LoginInvalidPasswordException;
+import com.github.chacha89.todos.exception.UserDeletedException;
 import com.github.chacha89.todos.jwt.service.JWTService;
 import com.github.chacha89.todos.user.entity.User;
 import com.github.chacha89.todos.user.repository.UserRepository;
@@ -30,6 +31,10 @@ public class LoginService {
         // 사용자 조회
         User user = userRepository.findByEmail(loginRequestDto.getEmail())
                 .orElseThrow(() -> new LoginEmailNotFoundException());
+        // 삭제된 회원인지 확인
+        if (user.getDeleted()) {
+            throw new UserDeletedException("삭제된 회원입니다.");
+        }
 
         // 입력한 비밀번호와 기존 비밀번호 맞는지 확인
         boolean passwordMatches

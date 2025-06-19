@@ -96,6 +96,13 @@ public class GlobalExceptionHandler {
                 .body(APIResponse.fail(401,"비밀번호가 일치하지 않습니다.",null));
 
     }
+    // 삭제된 회원 일시 예외처리
+    @ExceptionHandler(UserDeletedException.class)
+    public ResponseEntity<APIResponse<Void>>handleUserDeletedException(UserDeletedException e) {
+        return  ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body( APIResponse.fail(400,"이미 삭제된 회원입니다.", null));
+    }
 
 
 }
