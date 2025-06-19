@@ -2,7 +2,7 @@ package com.github.chacha89.todos.user.controller;
 
 import com.github.chacha89.todos.jwt.service.JWTService;
 import com.github.chacha89.todos.user.dto.requestDto.UserCreateRequestDto;
-import com.github.chacha89.todos.user.dto.requestDto.UserDeleteRequestDto;
+//import com.github.chacha89.todos.user.dto.requestDto.UserDeleteRequestDto;
 import com.github.chacha89.todos.user.dto.requestDto.UserUpdateRequestDto;
 import com.github.chacha89.todos.user.dto.responseDto.APIResponse;
 import com.github.chacha89.todos.user.dto.responseDto.UserCreateResponseDto;
@@ -60,13 +60,13 @@ public class UserController {
      * 회원 삭제
      */
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<UserCreateResponseDto> deleteUserAPI(
-            @PathVariable Long id,
-            @RequestBody UserDeleteRequestDto request) {
-        UserCreateResponseDto deletedUser = userService.deleteUserAPI(id, request.getRawPassword());
-        return ResponseEntity.ok(deletedUser);
-    }
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<UserCreateResponseDto> deleteUserAPI(
+//            @PathVariable Long id,
+//            @RequestBody UserDeleteRequestDto request) {
+//        UserCreateResponseDto deletedUser = userService.deleteUserAPI(id, request.getRawPassword());
+//        return ResponseEntity.ok(deletedUser);
+//    }
 
 
 

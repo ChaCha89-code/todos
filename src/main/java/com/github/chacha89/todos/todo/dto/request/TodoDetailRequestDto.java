@@ -1,4 +1,4 @@
-package com.github.chacha89.todos.todo.dto.response.dto.dto.request;
+package com.github.chacha89.todos.todo.dto.request;
 
 import lombok.Getter;
 

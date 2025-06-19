@@ -1,11 +1,10 @@
-package com.github.chacha89.todos.todo.dto;
+package com.github.chacha89.todos.todo.dto.response;
 
-public class TodoDeleteResponseDto {
-
+public class TodoCreateErrorResponseDto {
     private int status;
     private String message;
 
-    public TodoDeleteResponseDto(int status, String message) {
+    public TodoCreateErrorResponseDto(int status, String message) {
         this.status = status;
         this.message = message;
     }

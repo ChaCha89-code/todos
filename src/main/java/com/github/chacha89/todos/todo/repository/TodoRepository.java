@@ -3,6 +3,7 @@ package com.github.chacha89.todos.todo.repository;
 import com.github.chacha89.todos.todo.entity.Progress;
 import com.github.chacha89.todos.todo.entity.Todo;
 import com.github.chacha89.todos.user.entity.User;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,17 +14,17 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TodoRepository extends JpaRepository<Todo, Long> {
-    // @Query("SELECT t FROM Todo t LEFT JOIN FETCH t.user WHERE t.progress = :progress AND t.user.userName = :userUserName")
-    // 위 쿼리문은 쿼리문 없이 적용해보고 적용 예정
-    Page<Todo> findByProgressAndUser_UserNameOrderByUpdatedAtDesc(String progress, String userUserName, Pageable pageable);
 
-//    @Query("SELECT t FROM Todo t WHERE t.content LIKE %:content% AND t.progress = :progress AND t.user.userName = :userUserName ORDER BY t.updatedAt DESC")
-    Page<Todo> findByContentContainingAndProgressAndUser_UserNameOrderByUpdatedAtDesc( String content,
-                                                                                       Progress progress,
-                                                                                       String userUserName,
-                                                                                      Pageable pageable);
    //유저삭제시 할일 미할당 할때 필요
     List<Todo> findByUser(User user);
+
+
+    Long countByIsDeletedFalse();
+    
+    Page<Todo> findByContentContainingAndProgressOrderByUpdatedAtDesc(String content,
+                                                                      Progress progress,
+                                                                      Pageable pageable);
+
 
 
     //전체 개수 세기, IsDeletedrk False인 것만
@@ -34,4 +35,5 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
     Long countByIsDeletedFalse();
 
     Long countByProgress(Progress progress);
+
 }

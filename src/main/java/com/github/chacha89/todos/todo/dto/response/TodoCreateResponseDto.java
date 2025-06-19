@@ -1,4 +1,4 @@
-package com.github.chacha89.todos.todo.dto;
+package com.github.chacha89.todos.todo.dto.response;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package com.github.chacha89.todos.todo.dto;
+package com.github.chacha89.todos.todo.dto.request;
 
 import org.springframework.web.multipart.MultipartFile;
 

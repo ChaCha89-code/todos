@@ -1,6 +1,11 @@
 package com.github.chacha89.todos.todo.controller;
 
 import com.github.chacha89.todos.jwt.service.JWTService;
+
+import com.github.chacha89.todos.todo.dto.request.TodoCreateRequestDto;
+import com.github.chacha89.todos.todo.dto.response.*;
+import com.github.chacha89.todos.todo.dto.request.UpdateTodoRequestDto;
+
 import com.github.chacha89.todos.todo.dto.TodoCreateRequestDto;
 import com.github.chacha89.todos.todo.dto.TodoCreateResponseDto;
 import com.github.chacha89.todos.todo.dto.response.dto.dto.response.GetTodoListResponseDto;
@@ -9,6 +14,7 @@ import com.github.chacha89.todos.todo.dto.TodoDeleteResponseDto;
 import com.github.chacha89.todos.todo.dto.response.dto.dto.response.TodoDetailResponseDto;
 
 import com.github.chacha89.todos.todo.entity.Priority;
+
 import com.github.chacha89.todos.todo.entity.Progress;
 import com.github.chacha89.todos.todo.entity.Todo;
 
@@ -16,21 +22,21 @@ import com.github.chacha89.todos.todo.entity.Todo;
 
 import com.github.chacha89.todos.todo.service.TodoService;
 import com.github.chacha89.todos.user.service.UserService;
-import org.apache.coyote.Response;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 
 import io.jsonwebtoken.Claims;
 import com.github.chacha89.todos.user.dto.responseDto.APIResponse;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/todos")
@@ -49,6 +55,7 @@ public class TodoController {
 
     /**
      * 할 일 생성 API
+     *
      * @param bearerToken
      * @param requestDto
      * @return
@@ -68,34 +75,33 @@ public class TodoController {
         TodoCreateResponseDto responseDto = todoService.createTodoService(userId, requestDto);
         return ResponseEntity.ok(responseDto);
     }
+
     // todo 조회
     // 토큰 적용 추후 추가
     @GetMapping
-    public ResponseEntity<List<GetTodoListResponseDto>> getTodoListAPI(@RequestParam String progress,
-                                                                       @RequestParam String username,
-                                                                       @RequestParam(defaultValue = "0") int page,
-                                                                       @RequestParam(defaultValue = "10") int size,
-                                                                       @RequestParam(required = false) String search) {
+    public ResponseEntity<TodoListPaginatedResponseDto<GetTodoListResponseDto>> getTodoListAPI(@RequestParam String progress,
+                                                                                               @RequestParam String title,
+                                                                                               @RequestParam(defaultValue = "0") int page,
+                                                                                               @RequestParam(defaultValue = "10") int size,
+                                                                                               @RequestParam(required = false) String search) {
         Progress fromStringToEnum = Progress.fromString(progress);
-        List<GetTodoListResponseDto> todoListService
-                = todoService.getTodoListService(fromStringToEnum,username,page,size,search);
-        ResponseEntity<List<GetTodoListResponseDto>> responseEntity
+        TodoListPaginatedResponseDto<GetTodoListResponseDto> todoListService
+                = todoService.getTodoListService(fromStringToEnum, title,page, size, search);
+        ResponseEntity<TodoListPaginatedResponseDto<GetTodoListResponseDto>> responseEntity
                 = new ResponseEntity<>(todoListService, HttpStatus.OK);
         return responseEntity;
     }
-
 
 
     /**
      * 변경(임마 복사)
      */
     @PatchMapping("/{id}")
-    public APIResponse <UpdateTodoRequestDto> updateTodoAPI(@PathVariable Long id,
-                              @RequestBody UpdateTodoRequestDto updateRequestDto){
+    public APIResponse<UpdateTodoRequestDto> updateTodoAPI(@PathVariable Long id,
+                                                           @RequestBody UpdateTodoRequestDto updateRequestDto) {
         UpdateTodoRequestDto updateTodoRequestDto = todoService.updateTodoAPI(id, updateRequestDto);
-        return APIResponse.success( updateTodoRequestDto, "회원 수정 성공");
+        return APIResponse.success(updateTodoRequestDto, "회원 수정 성공");
     }
-
 
 
     @GetMapping("/{todoId}")
@@ -107,6 +113,7 @@ public class TodoController {
 
     /**
      * 할 일 삭제 API
+     *
      * @param todoId
      * @return
      */
@@ -125,7 +132,7 @@ public class TodoController {
      * 대쉬보드 전체 수 조회
      */
     @GetMapping("/allCount")
-    public ResponseEntity<String> getTodoAllCountAPI(){
+    public ResponseEntity<String> getTodoAllCountAPI() {
         Long todoAllCountAPI = todoService.getTodoAllCountAPI();
         return ResponseEntity.ok("전체 테스크 수 : " + todoAllCountAPI);
     }

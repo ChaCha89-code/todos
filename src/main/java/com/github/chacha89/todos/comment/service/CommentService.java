@@ -126,9 +126,7 @@ public class CommentService {
                                                                String comment,
                                                               int page,
                                                                int size) {
-        if(progress.equals(null)){
 
-        }
         // 페이지네이션을 위한 준비
         Pageable pageable = PageRequest.of(page, size);
         //데이터 조회
