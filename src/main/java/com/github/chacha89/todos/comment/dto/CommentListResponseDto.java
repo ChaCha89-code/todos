@@ -4,8 +4,9 @@ import com.github.chacha89.todos.comment.entity.Comment;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-public class CommentListResponseDto {
+public class CommentListResponseDto<T> {
     //속
     private Long id;
     private Long userId;
@@ -13,6 +14,7 @@ public class CommentListResponseDto {
     private String comment;
     private LocalDateTime createAt;
     private LocalDateTime updateAT;
+
 
     //생
     public CommentListResponseDto(Comment comment ) {
@@ -44,5 +46,9 @@ public class CommentListResponseDto {
 
     public LocalDateTime getCreateAt() {
         return createAt;
+    }
+
+    public LocalDateTime getUpdateAT() {
+        return updateAT;
     }
 }

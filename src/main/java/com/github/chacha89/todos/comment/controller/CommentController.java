@@ -76,14 +76,17 @@ public class CommentController {
      * @RequestParam Progress(Enum) progress 으로 매개변수 설정 후, 포스트맨에서 Param key : value 입력시에 에러가 발생하는 현상 확인.
      * Progress(Enum) 내부에서 String을 받으면 Enum으로 변환시켜주는 메서드 구현하여 @RequestParam String progress 받을 수 있게 함.
      */
+
     @GetMapping()
-    public APIResponse<List<CommentListResponseDto>> getCommentAPI (@RequestParam String progress,
-                               @RequestParam String comment,
-                               @RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "10") int size) {
+    public APIResponse<CommentListPaginatedResponseDto<CommentListResponseDto>> getCommentAPI (@RequestParam String progress,
+                                                                    @RequestParam String comment,
+                                                                    @RequestParam(defaultValue = "0") int page,
+                                                                    @RequestParam(defaultValue = "10") int size) {
         Progress FromStringToEnum = Progress.fromString(progress);
-        List<CommentListResponseDto> commentListService = commentService.getCommentListService(FromStringToEnum, comment, page, size);
-        APIResponse<List<CommentListResponseDto>> success = APIResponse.success(commentListService);
+        CommentListPaginatedResponseDto<CommentListResponseDto> commentListService
+                = commentService.getCommentListService(FromStringToEnum, comment, page, size);
+        APIResponse<CommentListPaginatedResponseDto<CommentListResponseDto>> success
+                = APIResponse.success(commentListService);
         return success;
 
     }

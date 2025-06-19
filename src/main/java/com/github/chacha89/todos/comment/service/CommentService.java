@@ -12,6 +12,7 @@ import com.github.chacha89.todos.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -19,6 +20,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 public class CommentService {
@@ -119,57 +122,71 @@ public class CommentService {
     }
 
     // 댓글 전체 조회
-    public List<CommentListResponseDto> getCommentListService( Progress progress,
+    public CommentListPaginatedResponseDto<CommentListResponseDto> getCommentListService( Progress progress,
                                                                String comment,
                                                               int page,
                                                                int size) {
 
          //데이터 조회
-        PageRequest pageRequest = PageRequest.of(page, size);
-        List<Comment> commentList
-                = commentRepository.findByProgressAndCommentContainingOrderByUpdatedAtDesc(progress, comment, pageRequest);
-        Page<Comment> allByCommentContaining = commentRepository.findAllByCommentContaining(comment, pageRequest);
-        //데이터 준비
+        Pageable pageable = PageRequest.of(page, size);
+
         List<CommentListResponseDto> commentListResponseDto = new ArrayList<>();
 
-        Progress todo = Progress.Todo;
-        Progress inProgress = Progress.InProgress;
-        Progress done = Progress.Done;
-        Progress overDue = Progress.OverDue;
+        Page<Comment> commentListFromTodo
+                = commentRepository.findCommentsByProgressAndContent(progress,comment,pageable);
 
-        if (progress.equals(todo)){
-            for (Comment comments : commentList){
-                CommentListResponseDto commentByProgressResponse = new CommentListResponseDto(comments);
-                commentListResponseDto.add(commentByProgressResponse);
+        Comment comment1;
 
-            }
+        List<CommentListResponseDto> listResponseDto = commentListFromTodo.getContent()
+                .stream()
+                .map(Comment -> new CommentListResponseDto(Comment)).toList();
 
-        } else if (progress.equals(inProgress)){
-            for (Comment comments : commentList){
-                CommentListResponseDto commentByProgressResponse = new CommentListResponseDto(comments);
-                commentListResponseDto.add(commentByProgressResponse);
+        CommentListPaginatedResponseDto<CommentListResponseDto> pagingCommentListResponseDto
+                = new CommentListPaginatedResponseDto<>(listResponseDto, commentListFromTodo.getTotalElements()
+                , commentListFromTodo.getTotalPages(), page);
+        return pagingCommentListResponseDto;
 
-            }
-        } else if (progress.equals(done)){
-            for (Comment comments : commentList){
-                CommentListResponseDto commentByProgressResponse = new CommentListResponseDto(comments);
-                commentListResponseDto.add(commentByProgressResponse);
+//        List<Comment> commentList
+//                = commentRepository.findByProgressAndCommentContainingOrderByUpdatedAtDesc(progress, comment, pageRequest);
+//        Page<Comment> allByCommentContaining = commentRepository.findAllByCommentContaining(comment, pageable);
+        //데이터 준비
 
-            }
-        } else if (progress.equals(overDue)){
-            for (Comment comments : commentList){
-                CommentListResponseDto commentByProgressResponse = new CommentListResponseDto(comments);
-                commentListResponseDto.add(commentByProgressResponse);
 
-            }
-        } else if (comment.isEmpty()){
-            for (Comment allComment : allByCommentContaining) {
-                CommentListResponseDto listResponseDto = new CommentListResponseDto(allComment);
-                commentListResponseDto.add(listResponseDto);
-            }
-        }
 
-        return commentListResponseDto;
+
+//        if (progress.equals(todo)){
+//            for (Comment comments : commentListFromTodo){
+//                CommentListResponseDto commentByProgressResponse = new CommentListResponseDto(comments);
+//                commentListResponseDto.add(commentByProgressResponse);
+//
+//            }
+//
+//        } else if (progress.equals(inProgress)){
+//            for (Comment comments : commentListFromTodo){
+//                CommentListResponseDto commentByProgressResponse = new CommentListResponseDto(comments);
+//                commentListResponseDto.add(commentByProgressResponse);
+//
+//            }
+//        } else if (progress.equals(done)){
+//            for (Comment comments : commentListFromTodo){
+//                CommentListResponseDto commentByProgressResponse = new CommentListResponseDto(comments);
+//                commentListResponseDto.add(commentByProgressResponse);
+//
+//            }
+//        } else if (progress.equals(overDue)){
+//            for (Comment comments : commentListFromTodo){
+//                CommentListResponseDto commentByProgressResponse = new CommentListResponseDto(comments);
+//                commentListResponseDto.add(commentByProgressResponse);
+//
+//            }
+//        } else if (comment.isEmpty()){
+//            for (Comment allComment : allByCommentContaining) {
+//                CommentListResponseDto listResponseDto = new CommentListResponseDto(allComment);
+//                commentListResponseDto.add(listResponseDto);
+//            }
+//        }
+//
+//        return commentListResponseDto;
 
 
 
