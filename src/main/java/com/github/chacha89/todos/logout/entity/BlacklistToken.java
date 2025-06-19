@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 public class BlacklistToken {
 
     @Id
-    @Column(length = 1000)
+    @Column(length = 767)
     private String token;
 
     public BlacklistToken() {}

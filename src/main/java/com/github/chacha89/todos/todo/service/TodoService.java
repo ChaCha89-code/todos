@@ -1,18 +1,21 @@
 package com.github.chacha89.todos.todo.service;
 
+import com.github.chacha89.todos.comment.dto.CommentListResponseDto;
+import com.github.chacha89.todos.comment.entity.Comment;
 import com.github.chacha89.todos.exception.MissingSearchTermException;
 import com.github.chacha89.todos.exception.TodoCreateException;
 import com.github.chacha89.todos.exception.UserIdNotFoundException;
 import com.github.chacha89.todos.todo.dto.TodoCreateRequestDto;
 import com.github.chacha89.todos.todo.dto.TodoCreateResponseDto;
-import com.github.chacha89.todos.todo.dto.response.dto.dto.response.GetTodoListResponseDto;
+//import com.github.chacha89.todos.todo.dto.response.dto.dto.response.GetTodoListResponseDto;
 import com.github.chacha89.todos.todo.dto.TodoDeleteResponseDto;
 import com.github.chacha89.todos.todo.dto.response.dto.dto.response.TodoDetailResponseDto;
 import com.github.chacha89.todos.todo.dto.UpdateTodoRequestDto;
+import com.github.chacha89.todos.todo.dto.response.dto.dto.response.GetTodoListResponseDto;
 import com.github.chacha89.todos.todo.entity.Priority;
 import com.github.chacha89.todos.todo.entity.Progress;
 import com.github.chacha89.todos.todo.entity.Todo;
-import com.github.chacha89.todos.todo.progressStatus.ProgressStatus;
+
 import com.github.chacha89.todos.todo.repository.TodoRepository;
 import com.github.chacha89.todos.user.entity.User;
 import com.github.chacha89.todos.user.repository.UserRepository;
@@ -24,6 +27,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
@@ -247,7 +251,7 @@ public class TodoService {
      * @return
      */
     @Transactional
-    public TodoDeleteResponseDto deleteToService(Long todoId) {
+    public TodoDeleteResponseDto deleteTodoService(Long todoId) {
 
         // 데이터 준비
         Optional<Todo> todoOptional = todoRepository.findById(todoId);
@@ -289,16 +293,18 @@ public class TodoService {
      * @return
      */
     @Transactional
-    public List<GetTodoListResponseDto> getTodoListService(String progress, String username, int page, int size, String content) {
+    public List<GetTodoListResponseDto> getTodoListService(Progress progress, String username, int page, int size, String content) {
         // 데이터 준비
-        log.info("content : {}",content);
-        log.info("progress : {}",progress);
-        log.info("username : {}",username);
+        log.info("content : {}", content);
+        log.info("progress : {}", progress);
+        log.info("username : {}", username);
 
         Pageable pageable = PageRequest.of(page, size);
         Page<Todo> progressPage
                 = todoRepository.findByContentContainingAndProgressAndUser_UserNameOrderByUpdatedAtDesc
                 (content, progress, username, pageable);
+
+
 //        Page<Todo> todoPage = todoRepository.findByProgressAndUser_UserNameOrderByUpdatedAtDesc(progress, username, pageable);
 
 
@@ -307,47 +313,87 @@ public class TodoService {
 //        if (search == null || search.isEmpty()) {
 //            throw new MissingSearchTermException();
 //        }
+//        Progress todo = Progress.Todo;
+//        Progress inProgress = Progress.InProgress;
+//        Progress done = Progress.Done;
+//        Progress overDue = Progress.OverDue;
         List<GetTodoListResponseDto> todoDtoList = new ArrayList<>();
+        return null;
 
-        // @Param progress = todo, onprogress, done, overdue 에 맞춰 데이터 반환
-        switch (progress) {
-
-            case "todo":
-                for (Todo todo : progressPage) {
-                    log.info("progress: {}",progress);
-                    log.info("progressPage: {}",progressPage);
-                    GetTodoListResponseDto todoList
-                            = new GetTodoListResponseDto(new GetTodoListResponseDto.TodoList(todo));
-                    log.info("todoList: {}",todoList);
-                    todoDtoList.add(todoList);
-                    log.info("todoDtoList : {}",todoDtoList);
-                }
-                break;
-            case "inprogress":
-                for (Todo todo : progressPage) {
-                    GetTodoListResponseDto todoList
-                            = new GetTodoListResponseDto(new GetTodoListResponseDto.OnProgressList(todo));
-                    todoDtoList.add(todoList);
-                }
-                break;
-            case "done":
-                for (Todo todo : progressPage) {
-                    GetTodoListResponseDto todoList
-                            = new GetTodoListResponseDto(new GetTodoListResponseDto.DoneList(todo));
-                    todoDtoList.add(todoList);
-                    log.info("todoDtoList.add(todoList) : {}",todoDtoList.add(todoList));
-                }
-                break;
-            case "overdue":
-                for (Todo todo : progressPage) {
-                    GetTodoListResponseDto todoList
-                            = new GetTodoListResponseDto(new GetTodoListResponseDto.OverdueList(todo));
-                    todoDtoList.add(todoList);
-                }
-                break;
-        }
-        log.info("todoDtoList 반환: {}", todoDtoList);
-        return todoDtoList;
+//         @Param progress = todo, onprogress, done, overdue 에 맞춰 데이터 반환
+//         progress, username 중에 하나만
+//        if (progress.equals(todo)) {
+//            for (Todo todos : progressPage) {
+//                GetTodoListResponseDto getTodoListResponseDto = new GetTodoListResponseDto(todos);
+//                todoDtoList.add(getTodoListResponseDto);
+//
+//            }
+//
+//        } else if (progress.equals(inProgress)) {
+//            for (Comment comments : inProgress) {
+//                CommentListResponseDto commentByProgressResponse = new CommentListResponseDto(comments);
+//                commentListResponseDto.add(commentByProgressResponse);
+//
+//            }
+//        } else if (progress.equals(done)) {
+//            for (Comment comments : commentList) {
+//                CommentListResponseDto commentByProgressResponse = new CommentListResponseDto(comments);
+//                commentListResponseDto.add(commentByProgressResponse);
+//
+//            }
+//        } else if (progress.equals(overDue)) {
+//            for (Comment comments : commentList) {
+//                CommentListResponseDto commentByProgressResponse = new CommentListResponseDto(comments);
+//                commentListResponseDto.add(commentByProgressResponse);
+//
+//            }
+//        } else if (comment.isEmpty()) {
+//            for (Comment allComment : allByCommentContaining) {
+//                CommentListResponseDto listResponseDto = new CommentListResponseDto(allComment);
+//                commentListResponseDto.add(listResponseDto);
+//            }
+//        }
+//
+//        return commentListResponseDto;
+//    }
+//        switch (progress) {
+//
+//            case :
+//                for (Todo todo : progressPage) {
+//                    log.info("progress: {}",progress);
+//                    log.info("progressPage: {}",progressPage);
+//                    GetTodoListResponseDto todoList
+//                            = new GetTodoListResponseDto(new GetTodoListResponseDto.TodoList(todo));
+//                    log.info("todoList: {}",todoList);
+//                    todoDtoList.add(todoList);
+//                    log.info("todoDtoList : {}",todoDtoList);
+//                }
+//                break;
+//            case "inprogress":
+//                for (Todo todo : progressPage) {
+//                    GetTodoListResponseDto todoList
+//                            = new GetTodoListResponseDto(new GetTodoListResponseDto.OnProgressList(todo));
+//                    todoDtoList.add(todoList);
+//                }
+//                break;
+//            case "done":
+//                for (Todo todo : progressPage) {
+//                    GetTodoListResponseDto todoList
+//                            = new GetTodoListResponseDto(new GetTodoListResponseDto.DoneList(todo));
+//                    todoDtoList.add(todoList);
+//                    log.info("todoDtoList.add(todoList) : {}",todoDtoList.add(todoList));
+//                }
+//                break;
+//            case "overdue":
+//                for (Todo todo : progressPage) {
+//                    GetTodoListResponseDto todoList
+//                            = new GetTodoListResponseDto(new GetTodoListResponseDto.OverdueList(todo));
+//                    todoDtoList.add(todoList);
+//                }
+//                break;
+//        }
+//        log.info("todoDtoList 반환: {}", todoDtoList);
+//        return todoDtoList;
 
     }
 

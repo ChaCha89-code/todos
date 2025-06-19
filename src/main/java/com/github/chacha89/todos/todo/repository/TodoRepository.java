@@ -19,13 +19,18 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
 
 //    @Query("SELECT t FROM Todo t WHERE t.content LIKE %:content% AND t.progress = :progress AND t.user.userName = :userUserName ORDER BY t.updatedAt DESC")
     Page<Todo> findByContentContainingAndProgressAndUser_UserNameOrderByUpdatedAtDesc( String content,
-                                                                                       String progress,
+                                                                                       Progress progress,
                                                                                        String userUserName,
                                                                                       Pageable pageable);
    //유저삭제시 할일 미할당 할때 필요
     List<Todo> findByUser(User user);
 
+
     //전체 개수 세기, IsDeletedrk False인 것만
+    List<Todo> findByProgressOrderByUpdatedAtDesc(Progress progress, Pageable pageable);
+
+
+
     Long countByIsDeletedFalse();
 
     Long countByProgress(Progress progress);

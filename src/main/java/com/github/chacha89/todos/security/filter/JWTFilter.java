@@ -57,6 +57,7 @@ public class JWTFilter implements Filter {
 
         if (blacklistTokenRepository.existsByToken(token)) {
             httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "로그아웃된 토큰입니다.");
+            return;
         }
 
         try {
