@@ -370,5 +370,15 @@ public class TodoService {
                }
     }
 
+    /**
+     *  대시보드 완성율
+     */
+    public double getProgressPercent(){
+        Long totalNumber = todoRepository.countByIsDeletedFalse();
+        Long doneNumber = todoRepository.countByProgress(Progress.DONE);
+        double result = (double) doneNumber / totalNumber * 100;
+        return result;
+    }
+
 
 }

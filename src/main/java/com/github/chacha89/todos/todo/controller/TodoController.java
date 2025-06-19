@@ -121,9 +121,24 @@ public class TodoController {
         return ResponseEntity.ok("전체 테스크 수 : " + todoAllCountAPI);
     }
 
+    /**
+     * 대쉬보드 특정 상태 개수 조회
+     * @param progress
+     * @return
+     */
     @GetMapping("/progress/{progress}")
     public ResponseEntity <String> getProgressCount(@PathVariable String progress){
         Long progressCount = todoService.getProgressCount(progress);
         return ResponseEntity.ok(progress.toUpperCase() + " 테스크 수는 :" + progressCount);
     }
+
+    /**
+     * 대시보드 완료율 구하기
+     */
+    @GetMapping("/donePercent")
+    public ResponseEntity<String> getCompletedPercent(){
+        double progressPercent = todoService.getProgressPercent();
+        return ResponseEntity.ok("완료율은 다음과 같습니다. : " + progressPercent+"%");
+    }
+
 }
