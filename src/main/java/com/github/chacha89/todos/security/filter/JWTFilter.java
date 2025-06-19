@@ -8,12 +8,12 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+
 import org.springframework.util.PatternMatchUtils;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
+
 import java.util.Arrays;
 
 
@@ -25,7 +25,7 @@ public class JWTFilter implements Filter {
         this.jwtService = jwtService;
     }
 
-    private static final String[] WHITE_lIST = {"/teams", "/users", "/auth/login","/todos/"};
+    private static final String[] WHITE_lIST = {"/teams", "/users", "/auth/login","/todos/","/comments"};
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
@@ -55,8 +55,9 @@ public class JWTFilter implements Filter {
         String token = bearJWTToken.substring(7);
 
         try {
-            log.info("token: {}", token);
+            log.info("token1: {}", token);
             jwtService.verifyToken(token);
+            log.info("token2: {}", token);
             filterChain.doFilter(servletRequest, servletResponse);
         } catch (Exception e) {
             httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "잘못된 토큰입니다.");

@@ -1,21 +1,25 @@
 package com.github.chacha89.todos.comment.service;
 
-import com.github.chacha89.todos.comment.dto.CommentCreateRequestDto;
-import com.github.chacha89.todos.comment.dto.CommentCreateResponseDto;
-import com.github.chacha89.todos.comment.dto.CommentData;
-import com.github.chacha89.todos.comment.dto.CommentDeleteResponseDto;
+import com.github.chacha89.todos.comment.dto.*;
 import com.github.chacha89.todos.comment.entity.Comment;
 import com.github.chacha89.todos.comment.repository.CommentRepository;
 import com.github.chacha89.todos.exception.CommentCreateException;
+import com.github.chacha89.todos.todo.entity.Progress;
 import com.github.chacha89.todos.todo.entity.Todo;
 import com.github.chacha89.todos.todo.repository.TodoRepository;
 import com.github.chacha89.todos.user.entity.User;
 import com.github.chacha89.todos.user.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-
+@Slf4j
 @Service
 public class CommentService {
     private final TodoRepository todoRepository;
@@ -24,8 +28,7 @@ public class CommentService {
 
     public CommentService(TodoRepository todoRepository,
                           UserRepository userRepository,
-                          CommentRepository commentRepository)
-    {
+                          CommentRepository commentRepository) {
         this.todoRepository = todoRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
@@ -43,7 +46,7 @@ public class CommentService {
         // 2. 예회 처리
         User foundUser = userRepository.findById(userId).orElseThrow(() -> new CommentCreateException(404, "회원 ID가 존재하지 않습니다."));
         Todo foundTodo = todoRepository.findById(todoId).orElseThrow(() -> new CommentCreateException(404, "할 일 ID가 존재하지 않습니다."));
-        if(comment.isEmpty() || comment == null) {
+        if (comment.isEmpty() || comment == null) {
             throw new CommentCreateException(400, "커멘트를 입력란이 비어있습니다.");
         }
 
@@ -54,14 +57,14 @@ public class CommentService {
         Comment savedComment = commentRepository.save(newComment);
 
         // 5. 데이터 준비_2
-        Long foundCommentId = savedComment.getId();
-        Long foundUserId = savedComment.getUser().getId();
-        Long foundTodoId = savedComment.getTodo().getId();
-        String foundComment = savedComment.getComment();
+        Long foundCommentId = savedComment.getId();  log.info("foundCommentId: {}",foundCommentId);
+        Long foundUserId = savedComment.getUser().getId(); log.info("foundUserId: {}",foundUserId);
+        Long foundTodoId = savedComment.getTodo().getId(); log.info("foundTodoId: {}",foundTodoId);
+        String foundComment = savedComment.getComment(); log.info("foundComment: {}",foundComment);
         LocalDateTime foundCreatedAt = savedComment.getCreatedAt();
 
         // 6. ResponseDto에 넣어줄 CommentData 준비
-        CommentData newCommentData= new CommentData(foundCommentId, foundUserId, foundTodoId, foundComment, foundCreatedAt);
+        CommentData newCommentData = new CommentData(foundCommentId, foundUserId, foundTodoId, foundComment, foundCreatedAt);
 
         // 7. 반환
         return new CommentCreateResponseDto(true, 200, newCommentData);
@@ -69,6 +72,7 @@ public class CommentService {
 
     /**
      * 커멘트 삭제 기능
+     *
      * @param commentId
      * @return
      */
@@ -88,26 +92,80 @@ public class CommentService {
     }
 
 
-
-
-
     /**
      * 댓글 수정
      */
-    public CommentData updateCommentAPI(Long id, CommentCreateRequestDto updateRequest){
+    public CommentData updateCommentAPI(Long id, CommentCreateRequestDto updateRequest) {
         Comment commentToUpdate = commentRepository.findById(id).orElseThrow();
 
         String originalComment = commentToUpdate.getComment();
         String newComment = updateRequest.getComment();
 
-        if( !(newComment ==null) &&!newComment.equals(originalComment)){
+        if (!(newComment == null) && !newComment.equals(originalComment)) {
             commentToUpdate.changeComment(newComment);
         }
 
         Comment updatedComment = commentRepository.save(commentToUpdate);
 
         CommentData commentDataResponse = new CommentData(updatedComment.getId(), updatedComment.getUser().getId(), updatedComment.getTodo().getId(), updatedComment.getComment(), updatedComment.getCreatedAt());
-        return commentDataResponse ;
+        return commentDataResponse;
+    }
+
+    // 댓글 전체 조회
+    public List<CommentListResponseDto> getCommentListService( Progress progress,
+                                                               String comment,
+                                                              int page,
+                                                               int size) {
+
+         //데이터 조회
+        PageRequest pageRequest = PageRequest.of(page, size);
+        List<Comment> commentList
+                = commentRepository.findByProgressAndCommentContainingOrderByUpdatedAtDesc(progress, comment, pageRequest);
+        Page<Comment> allByCommentContaining = commentRepository.findAllByCommentContaining(comment, pageRequest);
+        //데이터 준비
+        List<CommentListResponseDto> commentListResponseDto = new ArrayList<>();
+
+        Progress todo = Progress.Todo;
+        Progress inProgress = Progress.InProgress;
+        Progress done = Progress.Done;
+        Progress overDue = Progress.OverDue;
+
+        if (progress.equals(todo)){
+            for (Comment comments : commentList){
+                CommentListResponseDto commentByProgressResponse = new CommentListResponseDto(comments);
+                commentListResponseDto.add(commentByProgressResponse);
+
+            }
+
+        } else if (progress.equals(inProgress)){
+            for (Comment comments : commentList){
+                CommentListResponseDto commentByProgressResponse = new CommentListResponseDto(comments);
+                commentListResponseDto.add(commentByProgressResponse);
+
+            }
+        } else if (progress.equals(done)){
+            for (Comment comments : commentList){
+                CommentListResponseDto commentByProgressResponse = new CommentListResponseDto(comments);
+                commentListResponseDto.add(commentByProgressResponse);
+
+            }
+        } else if (progress.equals(overDue)){
+            for (Comment comments : commentList){
+                CommentListResponseDto commentByProgressResponse = new CommentListResponseDto(comments);
+                commentListResponseDto.add(commentByProgressResponse);
+
+            }
+        } else if (comment.isEmpty()){
+            for (Comment allComment : allByCommentContaining) {
+                CommentListResponseDto listResponseDto = new CommentListResponseDto(allComment);
+                commentListResponseDto.add(listResponseDto);
+            }
+        }
+
+        return commentListResponseDto;
+
+
+
     }
 
 }

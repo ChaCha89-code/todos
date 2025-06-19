@@ -1,5 +1,6 @@
 package com.github.chacha89.todos.todo.repository;
 
+import com.github.chacha89.todos.todo.entity.Progress;
 import com.github.chacha89.todos.todo.entity.Todo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,9 +18,11 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
 
 //    @Query("SELECT t FROM Todo t WHERE t.content LIKE %:content% AND t.progress = :progress AND t.user.userName = :userUserName ORDER BY t.updatedAt DESC")
     Page<Todo> findByContentContainingAndProgressAndUser_UserNameOrderByUpdatedAtDesc( String content,
-                                                                                       String progress,
+                                                                                       Progress progress,
                                                                                        String userUserName,
                                                                                       Pageable pageable);
+
+    List<Todo> findByProgressOrderByUpdatedAtDesc(Progress progress, Pageable pageable);
 
 
 }

@@ -1,9 +1,11 @@
 package com.github.chacha89.todos.comment.entity;
 
+import com.github.chacha89.todos.todo.entity.Progress;
 import com.github.chacha89.todos.todo.entity.Todo;
 import com.github.chacha89.todos.user.entity.User;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -32,6 +34,14 @@ public class Comment {
     @Column(name = "created_at", nullable = false)
     @CreatedDate
     private LocalDateTime createdAt;
+
+    @Enumerated(EnumType.STRING) // enum 사용 명시
+    @Column(name = "progress", nullable = false, length = 20)
+    private Progress progress;
+
+    @LastModifiedDate
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
 
     // 기능
     public Comment() {}
@@ -62,7 +72,16 @@ public class Comment {
         return createdAt;
     }
 
+    public Progress getProgress() {
+        return progress;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
     public void changeComment(String comment) {
         this.comment = comment;
     }
+
 }

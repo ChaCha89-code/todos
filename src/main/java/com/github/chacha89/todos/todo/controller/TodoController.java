@@ -6,6 +6,7 @@ import com.github.chacha89.todos.todo.dto.TodoCreateResponseDto;
 import com.github.chacha89.todos.todo.dto.response.dto.dto.response.GetTodoListResponseDto;
 import com.github.chacha89.todos.todo.dto.UpdateTodoRequestDto;
 import com.github.chacha89.todos.todo.dto.TodoDeleteResponseDto;
+import com.github.chacha89.todos.todo.entity.Progress;
 import com.github.chacha89.todos.todo.service.TodoService;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
@@ -62,8 +63,9 @@ public class TodoController {
                                                                        @RequestParam(defaultValue = "0") int page,
                                                                        @RequestParam(defaultValue = "10") int size,
                                                                        @RequestParam(required = false) String search) {
+        Progress fromStringToEnum = Progress.fromString(progress);
         List<GetTodoListResponseDto> todoListService
-                = todoService.getTodoListService(progress,username,page,size,search);
+                = todoService.getTodoListService(fromStringToEnum,username,page,size,search);
         ResponseEntity<List<GetTodoListResponseDto>> responseEntity
                 = new ResponseEntity<>(todoListService, HttpStatus.OK);
         return responseEntity;
