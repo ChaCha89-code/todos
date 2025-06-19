@@ -1,5 +1,6 @@
 package com.github.chacha89.todos.comment.entity;
 
+import com.github.chacha89.todos.todo.entity.Progress;
 import com.github.chacha89.todos.todo.entity.Todo;
 import com.github.chacha89.todos.user.entity.User;
 import jakarta.persistence.*;
@@ -52,7 +53,6 @@ public class Comment {
         this.comment = comment;
     }
 
-    // 기능
     public Long getId() {
         return id;
     }

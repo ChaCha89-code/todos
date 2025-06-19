@@ -1,5 +1,6 @@
 package com.github.chacha89.todos.todo.repository;
 
+import com.github.chacha89.todos.todo.entity.Progress;
 import com.github.chacha89.todos.todo.entity.Todo;
 import com.github.chacha89.todos.user.entity.User;
 import org.springframework.data.domain.Page;
@@ -18,11 +19,14 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
 
 //    @Query("SELECT t FROM Todo t WHERE t.content LIKE %:content% AND t.progress = :progress AND t.user.userName = :userUserName ORDER BY t.updatedAt DESC")
     Page<Todo> findByContentContainingAndProgressAndUser_UserNameOrderByUpdatedAtDesc( String content,
-                                                                                       String progress,
+                                                                                       Progress progress,
                                                                                        String userUserName,
                                                                                       Pageable pageable);
    //유저삭제시 할일 미할당 할때 필요
     List<Todo> findByUser(User user);
+
+    List<Todo> findByProgressOrderByUpdatedAtDesc(Progress progress, Pageable pageable);
+
 
     Long countByIsDeletedFalse();
 }

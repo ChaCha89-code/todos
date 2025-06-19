@@ -35,7 +35,7 @@ public class JWTService {
         String subjectUser = userId.toString(); // 사용자준비
         Date now = new Date(); // 현재시간
 //        Date expiration = new Date(now.getTime()+1000*60); // 만료시간 1분
-        Date expiration = new Date(now.getTime() + 1000 * 60 * 60); // 만료시간 60분
+        Date expiration = new Date(now.getTime() + 1000 * 60 * 60 * 24); // 만료시간 1일
 
         // 토큰 제작
 
