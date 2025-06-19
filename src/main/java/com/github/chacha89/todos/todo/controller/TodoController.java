@@ -8,6 +8,8 @@ import com.github.chacha89.todos.todo.dto.UpdateTodoRequestDto;
 import com.github.chacha89.todos.todo.dto.TodoDeleteResponseDto;
 import com.github.chacha89.todos.todo.dto.response.dto.dto.response.TodoDetailResponseDto;
 import com.github.chacha89.todos.todo.service.TodoService;
+import com.github.chacha89.todos.user.service.UserService;
+import org.apache.coyote.Response;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 
@@ -27,11 +29,13 @@ public class TodoController {
 
     private final TodoService todoService;
     private final JWTService jwtService;
+    private final UserService userService;
 
 
-    public TodoController(TodoService todoService, JWTService jwtService) {
+    public TodoController(TodoService todoService, JWTService jwtService, UserService userService) {
         this.todoService = todoService;
         this.jwtService = jwtService;
+        this.userService = userService;
     }
 
     /**
@@ -104,5 +108,15 @@ public class TodoController {
         } else {
             return ResponseEntity.status(HttpStatus.OK).body(responseDto);
         }
+    }
+
+
+    /**
+     * 대쉬보드 전체 수 조회
+     */
+    @GetMapping("/allCount")
+    public ResponseEntity<String> getTodoAllCountAPI(){
+        Long todoAllCountAPI = todoService.getTodoAllCountAPI();
+        return ResponseEntity.ok("전체 테스크 수 : " + todoAllCountAPI);
     }
 }

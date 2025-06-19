@@ -21,5 +21,5 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
                                                                                        String userUserName,
                                                                                       Pageable pageable);
 
-
+    Long countByIsDeletedFalse();
 }

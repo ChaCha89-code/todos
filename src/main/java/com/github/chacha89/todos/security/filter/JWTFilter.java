@@ -28,7 +28,7 @@ public class JWTFilter implements Filter {
         this.blacklistTokenRepository = blacklistTokenRepository;
     }
 
-    private static final String[] WHITE_lIST = {"/teams","/users" ,"/users/**", "/auth/login","/todos/"};
+    private static final String[] WHITE_lIST = {"/teams","/users" ,"/users/**", "/auth/login","/todos/","/todos/allCount"};
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
