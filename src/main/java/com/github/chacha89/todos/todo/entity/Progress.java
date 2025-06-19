@@ -1,7 +1,7 @@
 package com.github.chacha89.todos.todo.entity;
 
 public enum Progress {
-    NotStarted(1), InProgress(2), Completed(3);
+    TODO(1), INPROGRESS(2), DONE(3);
 
     private final int step;
 

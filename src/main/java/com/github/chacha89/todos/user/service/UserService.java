@@ -135,7 +135,7 @@ public class UserService {
     /**
      * 회원 수정
      */
-    public UserCreateResponseDto updateUserAPI(Long id, UserUpdateRequestDto updateRequest) {
+    public UserCreateResponseDto updateUserAPI(Long id, UserUpdateRequestDto updateRequest){
 
         //1. 변경할 user 객체 찾기
         User userToUpdate = userRepository.findById(id).orElseThrow();
@@ -144,8 +144,8 @@ public class UserService {
         String newPassword = updateRequest.getNewPassword();
         String newUserImage = updateRequest.getNewUserImage();
 
-        if (!(newUserImage == null) && !(newUserImage.isBlank())) {
-            userToUpdate.changeUserImage(newUserImage);
+        if( !(newUserImage == null) && !(newUserImage.isBlank())){
+             userToUpdate.changeUserImage(newUserImage);
         }
 
         if (!passwordEncoder.matches(confirmPassword, userToUpdate.getPassword())) {
