@@ -5,6 +5,7 @@ import com.github.chacha89.todos.team.dto.responseDto.TeamCreateResponseDto;
 import com.github.chacha89.todos.todo.dto.TodoCreateErrorResponseDto;
 import com.github.chacha89.todos.todo.dto.TodoCreateResponseDto;
 import com.github.chacha89.todos.user.dto.responseDto.APIErrorResponseDto;
+import com.github.chacha89.todos.user.dto.responseDto.APIResponse;
 import com.github.chacha89.todos.user.dto.responseDto.UserCreateResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -86,4 +87,15 @@ public class GlobalExceptionHandler {
                 = new ResponseEntity<>(MissingSearchTermResponse, HttpStatus.BAD_REQUEST);
         return MissingSearchTermExceptionResponse;
     }
+
+    //비밀번호 검증
+    @ExceptionHandler(PasswordMismatchException.class)
+    public ResponseEntity<APIResponse<Void>>handlePasswordMismatchException(PasswordMismatchException e){
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(APIResponse.fail(401,"비밀번호가 일치하지 않습니다.",null));
+
+    }
+
+
 }
