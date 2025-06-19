@@ -7,6 +7,7 @@ import com.github.chacha89.todos.todo.dto.response.dto.dto.response.GetTodoListR
 import com.github.chacha89.todos.todo.dto.UpdateTodoRequestDto;
 import com.github.chacha89.todos.todo.dto.TodoDeleteResponseDto;
 import com.github.chacha89.todos.todo.dto.response.dto.dto.response.TodoDetailResponseDto;
+import com.github.chacha89.todos.todo.entity.Progress;
 import com.github.chacha89.todos.todo.service.TodoService;
 import com.github.chacha89.todos.user.service.UserService;
 import org.apache.coyote.Response;
@@ -118,5 +119,11 @@ public class TodoController {
     public ResponseEntity<String> getTodoAllCountAPI(){
         Long todoAllCountAPI = todoService.getTodoAllCountAPI();
         return ResponseEntity.ok("전체 테스크 수 : " + todoAllCountAPI);
+    }
+
+    @GetMapping("/progress/{progress}")
+    public ResponseEntity <String> getProgressCount(@PathVariable String progress){
+        Long progressCount = todoService.getProgressCount(progress);
+        return ResponseEntity.ok(progress.toUpperCase() + " 테스크 수는 :" + progressCount);
     }
 }

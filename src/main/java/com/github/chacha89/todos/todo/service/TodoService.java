@@ -32,11 +32,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 
 @Slf4j
@@ -360,6 +356,18 @@ public class TodoService {
      */
     public Long getTodoAllCountAPI(){
         return todoRepository.countByIsDeletedFalse();
+    }
+
+    /**
+     * 대시보드 - 특정 상태 개수 구하기
+     */
+    public Long getProgressCount(String progress){
+        try {
+            Progress countProgress = Progress.valueOf(progress.trim().toUpperCase());
+            return todoRepository.countByProgress(countProgress);
+        } catch(IllegalArgumentException e){
+            throw new TodoCreateException(400, "존재하지 않는 상태 값입니다.");
+               }
     }
 
 

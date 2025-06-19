@@ -1,5 +1,6 @@
 package com.github.chacha89.todos.todo.repository;
 
+import com.github.chacha89.todos.todo.entity.Progress;
 import com.github.chacha89.todos.todo.entity.Todo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,5 +22,8 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
                                                                                        String userUserName,
                                                                                       Pageable pageable);
 
+    //전체 개수 세기, IsDeletedrk False인 것만
     Long countByIsDeletedFalse();
+
+    Long countByProgress(Progress progress);
 }
