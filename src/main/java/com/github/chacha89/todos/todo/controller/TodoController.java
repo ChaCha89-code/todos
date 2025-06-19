@@ -6,6 +6,7 @@ import com.github.chacha89.todos.todo.dto.TodoCreateResponseDto;
 import com.github.chacha89.todos.todo.dto.response.dto.dto.response.GetTodoListResponseDto;
 import com.github.chacha89.todos.todo.dto.UpdateTodoRequestDto;
 import com.github.chacha89.todos.todo.dto.TodoDeleteResponseDto;
+import com.github.chacha89.todos.todo.dto.response.dto.dto.response.TodoDetailResponseDto;
 import com.github.chacha89.todos.todo.service.TodoService;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
@@ -79,6 +80,14 @@ public class TodoController {
                               @RequestBody UpdateTodoRequestDto updateRequestDto){
         UpdateTodoRequestDto updateTodoRequestDto = todoService.updateTodoAPI(id, updateRequestDto);
         return APIResponse.success( updateTodoRequestDto, "회원 수정 성공");
+    }
+
+
+
+    @GetMapping("/{todoId}")
+    public ResponseEntity<TodoDetailResponseDto> detailTodoAPI(@PathVariable Long todoId) {
+        TodoDetailResponseDto responseDto = todoService.findById(todoId);
+        return ResponseEntity.ok(responseDto);
     }
 
 

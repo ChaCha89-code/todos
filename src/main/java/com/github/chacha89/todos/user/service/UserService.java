@@ -1,6 +1,7 @@
 package com.github.chacha89.todos.user.service;
 
 import com.github.chacha89.todos.exception.UserCreateException;
+import com.github.chacha89.todos.exception.UserIdNotFoundException;
 import com.github.chacha89.todos.team.entity.Team;
 import com.github.chacha89.todos.team.repository.TeamRepository;
 import com.github.chacha89.todos.user.dto.requestDto.UserCreateRequestDto;
@@ -9,6 +10,7 @@ import com.github.chacha89.todos.user.dto.responseDto.UserCreateResponseDto;
 import com.github.chacha89.todos.user.dto.responseDto.UserInfoResponseDto;
 import com.github.chacha89.todos.user.entity.User;
 import com.github.chacha89.todos.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -155,8 +157,11 @@ public class UserService {
     /**
      * 회원 삭제
      */
-    public UserCreateResponseDto deleteUserAPI(Long id){
-        userRepository.deleteById(id);
-        return new UserCreateResponseDto(200, "회원이 삭제되었습니다.");
+    @Transactional
+    public UserCreateResponseDto deleteUserAPI(Long id) {
+        User user = userRepository.findByIdAndDeletedFalse(id)
+                .orElseThrow(() -> new UserIdNotFoundException());
+        user.delete(); // 실제 삭제가 아닌 deleted = true
+        return new UserCreateResponseDto(200, "유저 삭제 처리 완료되었습니다.");
     }
 }
