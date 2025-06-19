@@ -58,11 +58,13 @@ public class UserController {
     /**
      * 회원 삭제
      */
+
     @DeleteMapping("/{id}")
-    public ResponseEntity <UserCreateResponseDto> deleteUserAPI(@PathVariable Long id){
+    public ResponseEntity<UserCreateResponseDto> deleteUserAPI(@PathVariable Long id) {
         UserCreateResponseDto deletedUser = userService.deleteUserAPI(id);
         return ResponseEntity.ok(deletedUser);
     }
+
 
 
 

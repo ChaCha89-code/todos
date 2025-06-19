@@ -43,6 +43,16 @@ public class User {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+
+    private boolean deleted = false;
+
+    public void delete() {
+        this.deleted = true;
+    }
+    public boolean isDeleted() {
+        return deleted;
+    }
+
     public User() {}
 
     //

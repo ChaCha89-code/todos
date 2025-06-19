@@ -60,6 +60,11 @@ public class Todo {
     @Column
     private LocalDate dueDate;
 
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted = false;
+
+    private LocalDateTime deletedAt;
+
 
     // 생성자
     public Todo() {}
@@ -149,4 +154,19 @@ public class Todo {
         this.progress = progress;
     }
 
+    public Boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
+    }
 }

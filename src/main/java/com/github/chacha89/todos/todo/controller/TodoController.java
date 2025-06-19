@@ -6,6 +6,7 @@ import com.github.chacha89.todos.todo.dto.TodoCreateResponseDto;
 import com.github.chacha89.todos.todo.dto.response.dto.dto.response.GetTodoListResponseDto;
 import com.github.chacha89.todos.todo.dto.UpdateTodoRequestDto;
 import com.github.chacha89.todos.todo.dto.TodoDeleteResponseDto;
+import com.github.chacha89.todos.todo.dto.response.dto.dto.response.TodoDetailResponseDto;
 import com.github.chacha89.todos.todo.entity.Progress;
 import com.github.chacha89.todos.todo.service.TodoService;
 import org.springframework.data.repository.query.Param;
@@ -85,6 +86,18 @@ public class TodoController {
 
 
 
+    @GetMapping("/{todoId}")
+    public ResponseEntity<TodoDetailResponseDto> detailTodoAPI(@PathVariable Long todoId) {
+        TodoDetailResponseDto responseDto = todoService.findById(todoId);
+        return ResponseEntity.ok(responseDto);
+    }
+
+
+    /**
+     * 할 일 삭제 API
+     * @param todoId
+     * @return
+     */
     @DeleteMapping("/{todoId}")
     public ResponseEntity<TodoDeleteResponseDto> deleteTodoAPI(@PathVariable Long todoId) {
         TodoDeleteResponseDto responseDto = todoService.deleteToService(todoId);

@@ -35,15 +35,16 @@ public class Comment {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    @Enumerated(EnumType.STRING) // enum 사용 명시
-    @Column(name = "progress", nullable = false, length = 20)
-    private Progress progress;
-
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    // 기능
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted = false;
+
+    private LocalDateTime deletedAt;
+
+    // 생성자
     public Comment() {}
 
     public Comment(User user, Todo todo, String comment) {
@@ -72,16 +73,17 @@ public class Comment {
         return createdAt;
     }
 
-    public Progress getProgress() {
-        return progress;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
+    public LocalDateTime getUpdatedAt() { return updatedAt;}
 
     public void changeComment(String comment) {
         this.comment = comment;
     }
 
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
+    }
 }

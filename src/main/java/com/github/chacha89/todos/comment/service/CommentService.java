@@ -28,26 +28,26 @@ public class CommentService {
 
     public CommentService(TodoRepository todoRepository,
                           UserRepository userRepository,
-                          CommentRepository commentRepository) {
+                          CommentRepository commentRepository)
+    {
         this.todoRepository = todoRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
     }
 
     /**
-     * 커멘트 생성 기능
+     * 댓글 생성 기능
      */
-    public CommentCreateResponseDto createCommentAPI(CommentCreateRequestDto requestDto) {
+    public CommentCreateResponseDto createCommentAPI(Long userId, CommentCreateRequestDto requestDto) {
         // 1. 데이터 준비_1
-        Long userId = requestDto.getUserId();
         Long todoId = requestDto.getTodoId();
         String comment = requestDto.getComment();
 
         // 2. 예회 처리
         User foundUser = userRepository.findById(userId).orElseThrow(() -> new CommentCreateException(404, "회원 ID가 존재하지 않습니다."));
         Todo foundTodo = todoRepository.findById(todoId).orElseThrow(() -> new CommentCreateException(404, "할 일 ID가 존재하지 않습니다."));
-        if (comment.isEmpty() || comment == null) {
-            throw new CommentCreateException(400, "커멘트를 입력란이 비어있습니다.");
+        if(comment == null || comment.isEmpty()) {
+            throw new CommentCreateException(400, "댓글 입력란이 비어있습니다.");
         }
 
         // 3. 엔티티 생성
@@ -62,9 +62,10 @@ public class CommentService {
         Long foundTodoId = savedComment.getTodo().getId(); log.info("foundTodoId: {}",foundTodoId);
         String foundComment = savedComment.getComment(); log.info("foundComment: {}",foundComment);
         LocalDateTime foundCreatedAt = savedComment.getCreatedAt();
+        LocalDateTime foundUpdatedAt = savedComment.getUpdatedAt();
 
         // 6. ResponseDto에 넣어줄 CommentData 준비
-        CommentData newCommentData = new CommentData(foundCommentId, foundUserId, foundTodoId, foundComment, foundCreatedAt);
+        CommentData newCommentData= new CommentData(foundCommentId, foundUserId, foundTodoId, foundComment, foundCreatedAt, foundUpdatedAt);
 
         // 7. 반환
         return new CommentCreateResponseDto(true, 200, newCommentData);
@@ -72,7 +73,6 @@ public class CommentService {
 
     /**
      * 커멘트 삭제 기능
-     *
      * @param commentId
      * @return
      */
@@ -82,7 +82,11 @@ public class CommentService {
 
         if (commentOptional.isPresent()) {
             Comment comment = commentOptional.get();
-            commentRepository.delete(comment);
+
+            comment.setDeleted(true);
+            comment.setDeletedAt(LocalDateTime.now());
+            commentRepository.save(comment);
+
             CommentDeleteResponseDto responseDto = new CommentDeleteResponseDto(200, "댓글이 성공적으로 삭제되었습니다.");
             return responseDto;
         } else {
@@ -90,6 +94,9 @@ public class CommentService {
             return responseDto;
         }
     }
+
+
+
 
 
     /**
@@ -107,8 +114,8 @@ public class CommentService {
 
         Comment updatedComment = commentRepository.save(commentToUpdate);
 
-        CommentData commentDataResponse = new CommentData(updatedComment.getId(), updatedComment.getUser().getId(), updatedComment.getTodo().getId(), updatedComment.getComment(), updatedComment.getCreatedAt());
-        return commentDataResponse;
+        CommentData commentDataResponse = new CommentData(updatedComment.getId(), updatedComment.getUser().getId(), updatedComment.getTodo().getId(), updatedComment.getComment(), updatedComment.getCreatedAt(), updatedComment.getUpdatedAt());
+        return commentDataResponse ;
     }
 
     // 댓글 전체 조회
