@@ -122,13 +122,19 @@ public class UserService {
         return new UserCreateResponseDto(200, "회원가입이 정상적으로 완료 되었습니다.");
 
     }
- // 회원 가입 기능
-  public UserInfoResponseDto getUserById(Long id){
-      User user = userRepository.findById(id)
-              .orElseThrow(()-> new IllegalArgumentException("회원을 찾을 수 없습니다."));
-      return UserInfoResponseDto.from(user,"회원을 조회 하였습니다.");
 
-  }
+    /**
+     * 회원 조회
+     *
+     * @param id
+     * @return
+     */
+    public UserInfoResponseDto getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+        return UserInfoResponseDto.from(user, "회원을 조회 하였습니다.");
+
+    }
 
     /**
      * 회원 수정
@@ -143,13 +149,13 @@ public class UserService {
         String newUserImage = updateRequest.getNewUserImage();
 
         if( !(newUserImage == null) && !(newUserImage.isBlank())){
-            userToUpdate.changeUserImage(newUserImage);
+             userToUpdate.changeUserImage(newUserImage);
         }
 
-        if(!passwordEncoder.matches(confirmPassword, userToUpdate.getPassword())){
+        if (!passwordEncoder.matches(confirmPassword, userToUpdate.getPassword())) {
             throw new UserCreateException(400, "비밀번호가 일치하지 않습니다.");
         }
-        if(!(newPassword ==null) && newPassword.equals(userToUpdate.getPassword()) && !newPassword.isBlank()){
+        if (!(newPassword == null) && newPassword.equals(userToUpdate.getPassword()) && !newPassword.isBlank()) {
             userToUpdate.changePassword(newPassword);
         }
 

@@ -24,5 +24,5 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
    //유저삭제시 할일 미할당 할때 필요
     List<Todo> findByUser(User user);
 
-
+    Long countByIsDeletedFalse();
 }
