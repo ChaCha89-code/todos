@@ -139,7 +139,12 @@ public class TodoService {
         );
 
     }
-// 할일 단건 조회기능
+
+    /**
+     * 할 일 단건 조회 기능
+     * @param todoId
+     * @return
+     */
     public TodoDetailResponseDto findById(Long todoId) {
         Todo todo = todoRepository.findById(todoId)
                 .orElseThrow(() -> new UserIdNotFoundException(HttpStatus.NOT_FOUND));
@@ -277,7 +282,7 @@ public class TodoService {
     }
 
     /**
-     * 조회 기능
+     * 할 일 전체 조회 기능
      *
      * @param progress
      * @param username
