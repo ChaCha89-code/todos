@@ -1,4 +1,4 @@
-package com.github.chacha89.todos.todo.dto.response.dto.dto.response;
+package com.github.chacha89.todos.todo.dto.response;
 
 import com.github.chacha89.todos.todo.entity.Priority;
 import com.github.chacha89.todos.todo.entity.Progress;

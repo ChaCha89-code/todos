@@ -12,19 +12,9 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-
-    Page<Comment> findAllByCommentContaining(String comment, Pageable pageable);
-//    List<Comment> findByProgressAndCommentContainingOrderByUpdatedAtDesc(Progress progress, String comment, Pageable pageable);
-//
-//    @Query("SELECT c FROM Comment c WHERE c.todo.progress = :progress AND c.isDeleted = false ORDER BY c.createdAt DESC")
-//    List<Comment> findByTodoProgress(@Param("progress") Progress progress, Pageable pageable);
-//
-//    List<Comment> findByTodo_ProgressAndIsDeletedFalseOrderByCreatedAtDesc(Progress progress, Pageable pageable);
-    List<Comment> findByTodo_ProgressAndCommentContainingOrderByCreatedAtDesc(Progress todoProgress, String comment, Pageable pageable);
-
-    @Query("SELECT c FROM Comment c WHERE c.todo.progress = :progress AND c.comment LIKE %:keyword% AND c.isDeleted = false ORDER BY c.createdAt DESC")
+    @Query("SELECT c FROM Comment c WHERE c.todo.progress = :progress AND c.comment LIKE %:comment% AND c.isDeleted = false ORDER BY c.createdAt DESC")
     Page<Comment> findCommentsByProgressAndContent(@Param("progress") Progress progress,
-                                                   @Param("keyword") String comment,
+                                                   @Param("comment") String comment,
                                                    Pageable pageable);
 
 
