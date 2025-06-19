@@ -104,7 +104,7 @@ public class TodoController {
      */
     @DeleteMapping("/{todoId}")
     public ResponseEntity<TodoDeleteResponseDto> deleteTodoAPI(@PathVariable Long todoId) {
-        TodoDeleteResponseDto responseDto = todoService.deleteToService(todoId);
+        TodoDeleteResponseDto responseDto = todoService.deleteTodoService(todoId);
         if (responseDto.getStatus() == 404) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDto);
         } else {

@@ -254,7 +254,7 @@ public class TodoService {
      * @return
      */
     @Transactional
-    public TodoDeleteResponseDto deleteToService(Long todoId) {
+    public TodoDeleteResponseDto deleteTodoService(Long todoId) {
 
         // 데이터 준비
         Optional<Todo> todoOptional = todoRepository.findById(todoId);
