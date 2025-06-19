@@ -1,10 +1,8 @@
 package com.github.chacha89.todos.todo.dto.response;
 
-import com.github.chacha89.todos.todo.entity.Priority;
-import com.github.chacha89.todos.todo.entity.Progress;
-import com.github.chacha89.todos.todo.entity.Todo;
+import com.github.chacha89.todos.common.commonEnum.Priority;
+import com.github.chacha89.todos.common.commonEnum.Progress;
 import lombok.Getter;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 @Getter

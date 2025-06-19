@@ -1,18 +1,13 @@
 package com.github.chacha89.todos.todo.service;
 
-import com.github.chacha89.todos.comment.dto.CommentListPaginatedResponseDto;
-import com.github.chacha89.todos.comment.dto.CommentListResponseDto;
-import com.github.chacha89.todos.comment.entity.Comment;
-import com.github.chacha89.todos.exception.TodoCreateException;
-import com.github.chacha89.todos.exception.UserIdNotFoundException;
+import com.github.chacha89.todos.todo.exception.TodoCreateException;
+import com.github.chacha89.todos.user.exception.UserIdNotFoundException;
 import com.github.chacha89.todos.todo.dto.request.TodoCreateRequestDto;
 import com.github.chacha89.todos.todo.dto.response.*;
-//import com.github.chacha89.todos.todo.dto.response.dto.dto.response.GetTodoListResponseDto;
 import com.github.chacha89.todos.todo.dto.request.UpdateTodoRequestDto;
-import com.github.chacha89.todos.todo.entity.Priority;
-import com.github.chacha89.todos.todo.entity.Progress;
+import com.github.chacha89.todos.common.commonEnum.Priority;
+import com.github.chacha89.todos.common.commonEnum.Progress;
 import com.github.chacha89.todos.todo.entity.Todo;
-
 import com.github.chacha89.todos.todo.repository.TodoRepository;
 import com.github.chacha89.todos.user.entity.User;
 import com.github.chacha89.todos.user.repository.UserRepository;
@@ -23,11 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -63,8 +55,6 @@ public class TodoService {
         MultipartFile image = requestDto.getImage();
         String todoContents = requestDto.getTodoContents();
         String assignee = requestDto.getAssignee();
-//        String priority = requestDto.getPriority();
-//        String progress = requestDto.getProgress();
         LocalDate dueDate = requestDto.getDueDate();
 
 
@@ -134,7 +124,6 @@ public class TodoService {
                 savedTodo.getCreatedAt(),
                 savedTodo.getUpdatedAt()
         );
-
     }
 
     /**
@@ -142,6 +131,7 @@ public class TodoService {
      * @param todoId
      * @return
      */
+    @Transactional
     public TodoDetailResponseDto findById(Long todoId) {
         Todo todo = todoRepository.findById(todoId)
                 .orElseThrow(() -> new UserIdNotFoundException(HttpStatus.NOT_FOUND));
@@ -160,10 +150,10 @@ public class TodoService {
     /**
      * 할 일 수정(상태 변경) 기능
      */
+    @Transactional
     public UpdateTodoRequestDto updateTodoAPI(Long id, UpdateTodoRequestDto updateRequestDto) {
         //1. 데이터 준비
         Todo todo = todoRepository.findById(id).orElseThrow();
-
 
         String newTitle = updateRequestDto.getTitle();
         String newContents = updateRequestDto.getContents();
@@ -171,7 +161,6 @@ public class TodoService {
         String newPriority = updateRequestDto.getPriority();
         String newProgress = updateRequestDto.getProgress();
         String newImage = updateRequestDto.getImage();
-
 
         //2. 변경 -> null이 아니면  변경
 
@@ -224,9 +213,7 @@ public class TodoService {
             } catch(IllegalArgumentException e) {
                 throw new TodoCreateException(400, "잘못된 우선순위입니다.");
             }
-
         }
-
         Todo updatedTodo = todoRepository.save(todo);
 
         UpdateTodoRequestDto updateTodoResponse = UpdateTodoRequestDto.builder()
@@ -268,14 +255,10 @@ public class TodoService {
 
             TodoDeleteResponseDto responseDto = new TodoDeleteResponseDto(200, "할 일이 성공적으로 삭제되었습니다.");
             return responseDto;
-
         } else {
-
             TodoDeleteResponseDto responseDto = new TodoDeleteResponseDto(404, "할 일이 존재하지 않습니다.");
             return responseDto;
         }
-
-
     }
 
     /**
@@ -289,7 +272,8 @@ public class TodoService {
      * @return
      */
     @Transactional
-    public TodoListPaginatedResponseDto<GetTodoListResponseDto>  getTodoListService(Progress progress,String title, int page, int size, String content) {
+    public TodoListPaginatedResponseDto<GetTodoListResponseDto>  getTodoListService(Progress progress, int page,
+                                                                                    int size, String content) {
         // 데이터 준비
         Pageable pageable = PageRequest.of(page, size);
 
@@ -305,69 +289,5 @@ public class TodoService {
                 todoListPageFromTodo.getTotalElements(),
                 todoListPageFromTodo.getTotalPages(), size);
         return paginatedResponseDto;
-
     }
-
-
-    /**
-     * 대시보드(총 개수 구하기)
-     */
-    public Long getTodoAllCountAPI(){
-        return todoRepository.countByIsDeletedFalse();
-    }
-
-    /**
-     * 대시보드 - 특정 상태 개수 구하기
-     */
-    public Long getProgressCount(String progress){
-        try {
-            Progress countProgress = Progress.valueOf(progress.trim().toUpperCase());
-            return todoRepository.countByProgress(countProgress);
-        } catch(IllegalArgumentException e){
-            throw new TodoCreateException(400, "존재하지 않는 상태 값입니다.");
-               }
-    }
-
-    /**
-     *  대시보드 완성율
-     */
-    public double getProgressPercent(){
-        Long totalNumber = todoRepository.countByIsDeletedFalse();
-        Long doneNumber = todoRepository.countByProgress(Progress.DONE);
-        double result = (double) doneNumber / totalNumber * 100;
-        return result;
-    }
-
-    /**
-     * 대시보드 태스크 요약
-     */
-    public Map <Priority, List <Todo>> getTodoSummary(){
-
-        List<Todo> todos = todoRepository.findAll();
-
-        // 우선순위 Enum 배열을 내림차순 정렬
-        Priority[] priorities = Priority.values();
-        Arrays.sort(priorities, (a, b) -> b.getLevel() - a.getLevel());
-
-        Map<Priority, List<Todo>> groupedMap = new LinkedHashMap<>();
-
-        for (Priority priority : priorities) {
-            List<Todo> filtered = new ArrayList<>();
-
-            for (Todo todo : todos) {
-                if (todo.getPriority() == priority) {
-                    filtered.add(todo);
-                }
-            }
-
-            // 마감일 오름차순 정렬
-            filtered.sort(Comparator.comparing(Todo::getDueDate));
-            groupedMap.put(priority, filtered);
-        }
-
-        return groupedMap;
-    }
-
-
-
 }

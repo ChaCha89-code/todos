@@ -3,8 +3,8 @@ package com.github.chacha89.todos.security.filter;
 
 
 
-import com.github.chacha89.todos.jwt.service.JWTService;
-import com.github.chacha89.todos.logout.repository.BlacklistTokenRepository;
+import com.github.chacha89.todos.jwt.service.JWTUtil;
+import com.github.chacha89.todos.auth.logout.repository.BlacklistTokenRepository;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,18 +13,17 @@ import org.springframework.util.PatternMatchUtils;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 
 @Slf4j
 public class JWTFilter implements Filter {
-    private final JWTService jwtService;
+    private final JWTUtil jwtUtil;
 
     private final BlacklistTokenRepository blacklistTokenRepository;
 
-    public JWTFilter(JWTService jwtService, BlacklistTokenRepository blacklistTokenRepository) {
-        this.jwtService = jwtService;
+    public JWTFilter(JWTUtil jwtUtil, BlacklistTokenRepository blacklistTokenRepository) {
+        this.jwtUtil = jwtUtil;
         this.blacklistTokenRepository = blacklistTokenRepository;
     }
 
@@ -61,7 +60,7 @@ public class JWTFilter implements Filter {
         }
 
         try {
-            jwtService.verifyToken(token);
+            jwtUtil.verifyToken(token);
             filterChain.doFilter(servletRequest, servletResponse);
         } catch (Exception e) {
             httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "잘못된 토큰입니다.");

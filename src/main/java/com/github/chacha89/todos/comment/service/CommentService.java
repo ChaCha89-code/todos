@@ -3,8 +3,8 @@ package com.github.chacha89.todos.comment.service;
 import com.github.chacha89.todos.comment.dto.*;
 import com.github.chacha89.todos.comment.entity.Comment;
 import com.github.chacha89.todos.comment.repository.CommentRepository;
-import com.github.chacha89.todos.exception.CommentCreateException;
-import com.github.chacha89.todos.todo.entity.Progress;
+import com.github.chacha89.todos.comment.exception.CommentCreateException;
+import com.github.chacha89.todos.common.commonEnum.Progress;
 import com.github.chacha89.todos.todo.entity.Todo;
 import com.github.chacha89.todos.todo.repository.TodoRepository;
 import com.github.chacha89.todos.user.entity.User;
@@ -14,13 +14,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service

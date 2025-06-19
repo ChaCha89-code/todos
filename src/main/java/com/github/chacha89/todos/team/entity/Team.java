@@ -27,7 +27,7 @@ public class Team {
 //    private List<User> users;
 
     // 생성자
-    public Team() {}
+    protected Team() {}
 
     public Team(String teamName, String description) {
         this.teamName = teamName;

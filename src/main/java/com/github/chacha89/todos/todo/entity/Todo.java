@@ -1,5 +1,7 @@
 package com.github.chacha89.todos.todo.entity;
 
+import com.github.chacha89.todos.common.commonEnum.Priority;
+import com.github.chacha89.todos.common.commonEnum.Progress;
 import com.github.chacha89.todos.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -67,7 +69,7 @@ public class Todo {
 
 
     // 생성자
-    public Todo() {}
+    protected Todo() {}
 
     public Todo(User user, String assignee, String title, String image, String content, Priority priority, Progress progress, LocalDate dueDate) {
         this.user = user;

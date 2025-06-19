@@ -1,14 +1,12 @@
 package com.github.chacha89.todos.user.controller;
 
-import com.github.chacha89.todos.jwt.service.JWTService;
 import com.github.chacha89.todos.user.dto.requestDto.UserCreateRequestDto;
 //import com.github.chacha89.todos.user.dto.requestDto.UserDeleteRequestDto;
 import com.github.chacha89.todos.user.dto.requestDto.UserUpdateRequestDto;
-import com.github.chacha89.todos.user.dto.responseDto.APIResponse;
+import com.github.chacha89.todos.common.responseDto.APIResponse;
 import com.github.chacha89.todos.user.dto.responseDto.UserCreateResponseDto;
 import com.github.chacha89.todos.user.dto.responseDto.UserInfoResponseDto;
 import com.github.chacha89.todos.user.service.UserService;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -2,26 +2,23 @@ package com.github.chacha89.todos.comment.controller;
 
 import com.github.chacha89.todos.comment.dto.*;
 import com.github.chacha89.todos.comment.service.CommentService;
-import com.github.chacha89.todos.jwt.service.JWTService;
+import com.github.chacha89.todos.jwt.service.JWTUtil;
 import io.jsonwebtoken.Claims;
-import com.github.chacha89.todos.todo.entity.Progress;
+import com.github.chacha89.todos.common.commonEnum.Progress;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.github.chacha89.todos.user.dto.responseDto.APIResponse;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import com.github.chacha89.todos.common.responseDto.APIResponse;
 
 @RestController
 @RequestMapping("/comments")
 public class CommentController {
     private final CommentService commentService;
-    private final JWTService jwtService;
+    private final JWTUtil jwtUtil;
 
-    public CommentController(CommentService commentService, JWTService jwtService) {
+    public CommentController(CommentService commentService, JWTUtil jwtUtil) {
         this.commentService = commentService;
-        this.jwtService = jwtService;
+        this.jwtUtil = jwtUtil;
     }
 
     /**
@@ -33,7 +30,7 @@ public class CommentController {
             @RequestBody CommentCreateRequestDto requestDto
     ) {
         String token = bearerToken.replace("Bearer ", "").trim();
-        Claims claims = jwtService.verifyToken(token);
+        Claims claims = jwtUtil.verifyToken(token);
         Long userId = Long.parseLong(claims.getSubject());
         CommentCreateResponseDto responseDto = commentService.createCommentAPI(userId, requestDto);
         return ResponseEntity.ok(responseDto);

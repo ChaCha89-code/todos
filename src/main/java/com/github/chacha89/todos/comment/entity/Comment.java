@@ -1,6 +1,5 @@
 package com.github.chacha89.todos.comment.entity;
 
-import com.github.chacha89.todos.todo.entity.Progress;
 import com.github.chacha89.todos.todo.entity.Todo;
 import com.github.chacha89.todos.user.entity.User;
 import jakarta.persistence.*;
@@ -45,7 +44,8 @@ public class Comment {
     private LocalDateTime deletedAt;
 
     // 생성자
-    public Comment() {}
+    // JPA 가 사용하기 위한 캡슐화
+    protected Comment() {}
 
     public Comment(User user, Todo todo, String comment) {
         this.user = user;
