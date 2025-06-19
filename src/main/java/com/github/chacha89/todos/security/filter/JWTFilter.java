@@ -13,7 +13,7 @@ import org.springframework.util.PatternMatchUtils;
 
 
 import java.io.IOException;
-
+import java.util.ArrayList;
 import java.util.Arrays;
 
 
@@ -28,7 +28,7 @@ public class JWTFilter implements Filter {
         this.blacklistTokenRepository = blacklistTokenRepository;
     }
 
-    private static final String[] WHITE_lIST = {"/teams", "/users", "/auth/login","/todos/","/comments"};
+    private static final String[] WHITE_lIST = {"/teams","/users" ,"/users/**", "/auth/login","/todos/","/todos/allCount"};
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
@@ -60,9 +60,7 @@ public class JWTFilter implements Filter {
         }
 
         try {
-            log.info("token1: {}", token);
             jwtService.verifyToken(token);
-            log.info("token2: {}", token);
             filterChain.doFilter(servletRequest, servletResponse);
         } catch (Exception e) {
             httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "잘못된 토큰입니다.");

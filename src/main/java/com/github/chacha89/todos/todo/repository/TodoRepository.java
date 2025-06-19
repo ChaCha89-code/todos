@@ -25,4 +25,5 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
     List<Todo> findByProgressOrderByUpdatedAtDesc(Progress progress, Pageable pageable);
 
 
+    Long countByIsDeletedFalse();
 }

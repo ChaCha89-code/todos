@@ -3,6 +3,7 @@ package com.github.chacha89.todos.todo.entity;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Progress {
+    TODO(1), INPROGRESS(2), DONE(3);
 
     Todo("Todo",1),
     InProgress("InProgress",2),
@@ -35,7 +36,7 @@ public enum Progress {
     public int getStep() {
         return step;
     }
-}
+
 // TodoService : valueOf() + exception handeling 사용 -> .isEnum 사용 안해도 됨
 //    public boolean isEnum(String str){
 //        for( Progress progress : Progress.values()){
