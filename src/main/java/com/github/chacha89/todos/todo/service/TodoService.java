@@ -306,6 +306,8 @@ public class TodoService {
         Page<Todo> progressPage
                 = todoRepository.findByContentContainingAndProgressAndUser_UserNameOrderByUpdatedAtDesc
                 (content, progress, username, pageable);
+
+
 //        Page<Todo> todoPage = todoRepository.findByProgressAndUser_UserNameOrderByUpdatedAtDesc(progress, username, pageable);
 
 
@@ -314,10 +316,10 @@ public class TodoService {
 //        if (search == null || search.isEmpty()) {
 //            throw new MissingSearchTermException();
 //        }
-        Progress todo = Progress.Todo;
-        Progress inProgress = Progress.InProgress;
-        Progress done = Progress.Done;
-        Progress overDue = Progress.OverDue;
+//        Progress todo = Progress.Todo;
+//        Progress inProgress = Progress.InProgress;
+//        Progress done = Progress.Done;
+//        Progress overDue = Progress.OverDue;
         List<GetTodoListResponseDto> todoDtoList = new ArrayList<>();
         return null;
 

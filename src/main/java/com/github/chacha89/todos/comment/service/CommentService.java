@@ -121,73 +121,31 @@ public class CommentService {
         return commentDataResponse ;
     }
 
-    // 댓글 전체 조회
+    // 테스크(TODO, INPROGRESS, DOEN, OVERDUE)별 댓글 전체 조회
     public CommentListPaginatedResponseDto<CommentListResponseDto> getCommentListService( Progress progress,
                                                                String comment,
                                                               int page,
                                                                int size) {
+        if(progress.equals(null)){
 
-         //데이터 조회
+        }
+        // 페이지네이션을 위한 준비
         Pageable pageable = PageRequest.of(page, size);
-
-        List<CommentListResponseDto> commentListResponseDto = new ArrayList<>();
-
+        //데이터 조회
         Page<Comment> commentListFromTodo
                 = commentRepository.findCommentsByProgressAndContent(progress,comment,pageable);
-
-        Comment comment1;
-
+        //조회한 데이터에서 코멘트내용 GET
+        // STREAM으로 ENTITY COMMENT와 응답 DTO 매핑 시켜서 LIST 진행
         List<CommentListResponseDto> listResponseDto = commentListFromTodo.getContent()
                 .stream()
                 .map(Comment -> new CommentListResponseDto(Comment)).toList();
-
+        // 반환 준비
+        // 페이지네이션 DTO에 리스트된 내용, 전체 페이지 데이터의 수, 전체 페이지 수, 현재 페이지 반환
         CommentListPaginatedResponseDto<CommentListResponseDto> pagingCommentListResponseDto
                 = new CommentListPaginatedResponseDto<>(listResponseDto, commentListFromTodo.getTotalElements()
                 , commentListFromTodo.getTotalPages(), page);
+        // 반환
         return pagingCommentListResponseDto;
-
-//        List<Comment> commentList
-//                = commentRepository.findByProgressAndCommentContainingOrderByUpdatedAtDesc(progress, comment, pageRequest);
-//        Page<Comment> allByCommentContaining = commentRepository.findAllByCommentContaining(comment, pageable);
-        //데이터 준비
-
-
-
-
-//        if (progress.equals(todo)){
-//            for (Comment comments : commentListFromTodo){
-//                CommentListResponseDto commentByProgressResponse = new CommentListResponseDto(comments);
-//                commentListResponseDto.add(commentByProgressResponse);
-//
-//            }
-//
-//        } else if (progress.equals(inProgress)){
-//            for (Comment comments : commentListFromTodo){
-//                CommentListResponseDto commentByProgressResponse = new CommentListResponseDto(comments);
-//                commentListResponseDto.add(commentByProgressResponse);
-//
-//            }
-//        } else if (progress.equals(done)){
-//            for (Comment comments : commentListFromTodo){
-//                CommentListResponseDto commentByProgressResponse = new CommentListResponseDto(comments);
-//                commentListResponseDto.add(commentByProgressResponse);
-//
-//            }
-//        } else if (progress.equals(overDue)){
-//            for (Comment comments : commentListFromTodo){
-//                CommentListResponseDto commentByProgressResponse = new CommentListResponseDto(comments);
-//                commentListResponseDto.add(commentByProgressResponse);
-//
-//            }
-//        } else if (comment.isEmpty()){
-//            for (Comment allComment : allByCommentContaining) {
-//                CommentListResponseDto listResponseDto = new CommentListResponseDto(allComment);
-//                commentListResponseDto.add(listResponseDto);
-//            }
-//        }
-//
-//        return commentListResponseDto;
-
 
 
     }
