@@ -1,9 +1,11 @@
 package com.github.chacha89.todos.user.service;
 
+import com.github.chacha89.todos.exception.PasswordMismatchException;
 import com.github.chacha89.todos.exception.UserCreateException;
 import com.github.chacha89.todos.exception.UserIdNotFoundException;
 import com.github.chacha89.todos.team.entity.Team;
 import com.github.chacha89.todos.team.repository.TeamRepository;
+import com.github.chacha89.todos.todo.repository.TodoRepository;
 import com.github.chacha89.todos.user.dto.requestDto.UserCreateRequestDto;
 import com.github.chacha89.todos.user.dto.requestDto.UserUpdateRequestDto;
 import com.github.chacha89.todos.user.dto.responseDto.UserCreateResponseDto;
@@ -29,15 +31,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TodoRepository todoRepository;
 
     @Value("${file.path}") // 이미지 업로드 파일 경로
     private String uploadFolder;
 
     // 생성자
-    public UserService(UserRepository userRepository, TeamRepository teamRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, TeamRepository teamRepository, PasswordEncoder passwordEncoder,TodoRepository todoRepository) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.todoRepository = todoRepository;
     }
 
     /**
@@ -158,9 +162,17 @@ public class UserService {
      * 회원 삭제
      */
     @Transactional
-    public UserCreateResponseDto deleteUserAPI(Long id) {
+    public UserCreateResponseDto deleteUserAPI(Long id,String rawPassword) {
         User user = userRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new UserIdNotFoundException());
+        // 비밀번호 검증 처리
+        if(!passwordEncoder.matches(rawPassword,user.getPassword())){
+            throw new PasswordMismatchException("비밀번호가 일치하지 않습니다.");
+        }
+        //업무 미할당 처리
+        todoRepository.findByUser(user)
+                .forEach(todo -> todo.changeAssignee("unassigned"));
+
         user.delete(); // 실제 삭제가 아닌 deleted = true
         return new UserCreateResponseDto(200, "유저 삭제 처리 완료되었습니다.");
     }
