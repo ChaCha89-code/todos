@@ -197,7 +197,7 @@ public class TodoService {
         //우선순위 변경
         // todo.getPriority()는 이미 Priority enum인데, Priority.valueOf(...)는 String을 받습니다.
         // 즉, valueOf(enum)은 잘못된 호출이므로 아래와 같이 수정했습니다.
-        Priority priority = Priority.Low;
+        Priority priority = Priority.LOW;
 
         if (newPriority != null && !newPriority.isBlank()) {
             try {
@@ -352,6 +352,14 @@ public class TodoService {
         log.info("todoDtoList 반환: {}", todoDtoList);
         return todoDtoList;
 
+    }
+
+
+    /**
+     * 대시보드(총 개수 구하기)
+     */
+    public Long getTodoAllCountAPI(){
+        return todoRepository.countByIsDeletedFalse();
     }
 
 
