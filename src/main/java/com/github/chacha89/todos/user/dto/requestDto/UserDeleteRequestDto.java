@@ -12,4 +12,7 @@ public class UserDeleteRequestDto {
     public void setRawPassword(String rawPassword) {
         this.rawPassword = rawPassword;
     }
+
+
+
 }

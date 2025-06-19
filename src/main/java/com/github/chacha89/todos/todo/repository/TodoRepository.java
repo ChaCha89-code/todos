@@ -18,10 +18,22 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
    //유저삭제시 할일 미할당 할때 필요
     List<Todo> findByUser(User user);
 
+
     Long countByIsDeletedFalse();
     
     Page<Todo> findByContentContainingAndProgressOrderByUpdatedAtDesc(String content,
                                                                       Progress progress,
                                                                       Pageable pageable);
-//    Page<Todo> findByTitleContainingAndContentContainingAndProgressOrderByUpdatedAtDesc(@Size(max = 50, message = "제목은 최대 50자까지 입력 가능합니다.") String title, String content, Progress progress, Pageable pageable);
+
+
+
+    //전체 개수 세기, IsDeletedrk False인 것만
+    List<Todo> findByProgressOrderByUpdatedAtDesc(Progress progress, Pageable pageable);
+
+
+
+    Long countByIsDeletedFalse();
+
+    Long countByProgress(Progress progress);
+
 }
