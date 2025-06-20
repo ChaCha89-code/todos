@@ -2,6 +2,7 @@ package com.github.chacha89.todos.user.entity;
 
 import com.github.chacha89.todos.team.entity.Team;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
+@Where(clause = "deleted = false")// 소프트 삭제시 조회 안되게 하는 것 Hibernate에게 “삭제된 유저는 빼 줘” 라고 알려주는 방법
 public class User {
     // 속성
     @Id
@@ -43,7 +45,18 @@ public class User {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public User() {}
+
+    private boolean deleted = false;
+
+    public void delete() {
+        this.deleted = true;
+    }
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    // JPA가 사용하기 위한 생성자. 캡슐화
+    protected User() {}
 
     //
     public User(Team team, String userName, String email, String password, String userImage) {

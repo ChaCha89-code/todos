@@ -1,12 +1,19 @@
 package com.github.chacha89.todos.user.service;
 
-import com.github.chacha89.todos.exception.UserCreateException;
+import com.github.chacha89.todos.auth.exception.PasswordMismatchException;
+import com.github.chacha89.todos.user.exception.UserCreateException;
+import com.github.chacha89.todos.user.exception.UserIdNotFoundException;
 import com.github.chacha89.todos.team.entity.Team;
 import com.github.chacha89.todos.team.repository.TeamRepository;
+import com.github.chacha89.todos.todo.repository.TodoRepository;
 import com.github.chacha89.todos.user.dto.requestDto.UserCreateRequestDto;
 import com.github.chacha89.todos.user.dto.responseDto.UserCreateResponseDto;
 import com.github.chacha89.todos.user.entity.User;
 import com.github.chacha89.todos.user.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
+
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,20 +31,23 @@ public class UserService {
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TodoRepository todoRepository;
 
     @Value("${file.path}") // 이미지 업로드 파일 경로
     private String uploadFolder;
 
     // 생성자
-    public UserService(UserRepository userRepository, TeamRepository teamRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, TeamRepository teamRepository, PasswordEncoder passwordEncoder,TodoRepository todoRepository) {
         this.teamRepository = teamRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.todoRepository = todoRepository;
     }
 
     /**
      * 회원 가입 기능
      */
+    @Transactional
     public UserCreateResponseDto createUserService(UserCreateRequestDto requestDto) {
         // 1. 데이터 준비
         String teamName = requestDto.getTeamName();
@@ -114,4 +124,69 @@ public class UserService {
 
     }
 
+
+    /**
+     * 회원 조회
+     *
+     * @param id
+     * @return
+     */
+    @Transactional
+    public UserInfoResponseDto getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+        return UserInfoResponseDto.from(user, "회원을 조회 하였습니다.");
+
+    }
+
+    /**
+     * 회원 수정
+     */
+    @Transactional
+    public UserCreateResponseDto updateUserAPI(Long id, UserUpdateRequestDto updateRequest){
+
+        //1. 변경할 user 객체 찾기
+        User userToUpdate = userRepository.findById(id).orElseThrow();
+
+        String confirmPassword = updateRequest.getConfirmPassword();
+        String newPassword = updateRequest.getNewPassword();
+        String newUserImage = updateRequest.getNewUserImage();
+
+        if( !(newUserImage == null) && !(newUserImage.isBlank())){
+             userToUpdate.changeUserImage(newUserImage);
+        }
+
+        if (!passwordEncoder.matches(confirmPassword, userToUpdate.getPassword())) {
+            throw new UserCreateException(400, "비밀번호가 일치하지 않습니다.");
+        }
+        if (!(newPassword == null) && newPassword.equals(userToUpdate.getPassword()) && !newPassword.isBlank()) {
+            userToUpdate.changePassword(newPassword);
+        }
+
+        userRepository.save(userToUpdate);
+
+        return new UserCreateResponseDto(200, "회원 수정이 성공적으로 이루어졌습니다.");
+    }
+
+    /**
+     * 회원 삭제
+     */
+    @Transactional
+    public UserCreateResponseDto deleteUserAPI(Long id,String rawPassword) {
+        User user = userRepository.findByIdAndDeletedFalse(id)
+                .orElseThrow(() -> new UserIdNotFoundException());
+        // 비밀번호 검증 처리
+        if(!passwordEncoder.matches(rawPassword,user.getPassword())){
+            throw new PasswordMismatchException("비밀번호가 일치하지 않습니다.");
+        }
+        //업무 미할당 처리
+        todoRepository.findByUser(user)
+                .forEach(todo -> todo.changeAssignee("unassigned"));
+
+        user.delete(); // 실제 삭제가 아닌 deleted = true
+        return new UserCreateResponseDto(200, "유저 삭제 처리 완료되었습니다.");
+    }
 }
+
+}
+
