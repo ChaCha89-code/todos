@@ -80,7 +80,7 @@ https://www.notion.so/teamsparta/API-2112dc3ef5148090b4f0d725bf7682de
 
 ## Wireframe
 
-![Image](https://github.com/user-attachments/assets/35fd6105-401d-4400-8ec7-cad298f11f0f.png)
+![Image](https://github.com/user-attachments/assets/35fd6105-401d-4400-8ec7-cad298f11f0f)
 
 ![Image](https://github.com/user-attachments/assets/b1cd3d1d-85e7-4691-8cb7-bf5347dbc0ec)
 
