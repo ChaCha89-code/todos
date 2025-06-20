@@ -58,15 +58,15 @@ public class JWTFilter implements Filter {
             httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "로그아웃된 토큰입니다.");
             return;
         }
-
+//        jwtUtil.verifyToken(token);
+//        filterChain.doFilter(servletRequest, servletResponse);
         try {
-            jwtUtil.verifyToken(token);
-            filterChain.doFilter(servletRequest, servletResponse);
+              jwtUtil.verifyToken(token);
+
         } catch (Exception e) {
             httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "잘못된 토큰입니다.");
-
         }
-
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 
     /**

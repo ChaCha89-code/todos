@@ -5,10 +5,8 @@ import com.github.chacha89.todos.jwt.service.JWTUtil;
 import com.github.chacha89.todos.todo.dto.request.TodoCreateRequestDto;
 import com.github.chacha89.todos.todo.dto.response.*;
 import com.github.chacha89.todos.todo.dto.request.UpdateTodoRequestDto;
-import com.github.chacha89.todos.common.commonEnum.Priority;
 
 import com.github.chacha89.todos.common.commonEnum.Progress;
-import com.github.chacha89.todos.todo.entity.Todo;
 
 
 import com.github.chacha89.todos.todo.service.TodoService;
@@ -20,11 +18,6 @@ import com.github.chacha89.todos.common.responseDto.APIResponse;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
-
-import java.util.Map;
 
 
 @RestController
@@ -68,16 +61,16 @@ public class TodoController {
     // todo 조회
     // 토큰 적용 추후 추가
     @GetMapping
-    public ResponseEntity<TodoListPaginatedResponseDto<GetTodoListResponseDto>>
+    public ResponseEntity<TodoListPaginatedResponseDto<TodoGetListResponseDto>>
                     getTodoListAPI(@RequestParam String progress,
                                    @RequestParam(defaultValue = "0") int page,
                                    @RequestParam(defaultValue = "10") int size,
                                    @RequestParam(required = false) String search) {
 
         Progress fromStringToEnum = Progress.fromString(progress);
-        TodoListPaginatedResponseDto<GetTodoListResponseDto> todoListService
+        TodoListPaginatedResponseDto<TodoGetListResponseDto> todoListService
                 = todoService.getTodoListService(fromStringToEnum, page, size, search);
-        ResponseEntity<TodoListPaginatedResponseDto<GetTodoListResponseDto>> responseEntity
+        ResponseEntity<TodoListPaginatedResponseDto<TodoGetListResponseDto>> responseEntity
                 = new ResponseEntity<>(todoListService, HttpStatus.OK);
         return responseEntity;
     }

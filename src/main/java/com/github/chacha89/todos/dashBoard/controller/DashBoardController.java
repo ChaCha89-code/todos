@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping
+@RequestMapping("/dashboard")
 public class DashBoardController {
     private final DashBoardService dashBoardService;
 
@@ -24,7 +24,7 @@ public class DashBoardController {
     /**
      * 대쉬보드 전체 수 조회
      */
-    @GetMapping("/allCount")
+    @GetMapping()
     public ResponseEntity<String> getTodoAllCountAPI() {
         Long todoAllCountAPI = dashBoardService.getTodoAllCountAPI();
         return ResponseEntity.ok("전체 테스크 수 : " + todoAllCountAPI);
@@ -35,7 +35,7 @@ public class DashBoardController {
      * @param progress
      * @return
      */
-    @GetMapping("/progress/{progress}")
+    @GetMapping("/getprogress/{progress}")
     public ResponseEntity <String> getProgressCount(@PathVariable String progress){
         Long progressCount = dashBoardService.getProgressCount(progress);
         return ResponseEntity.ok(progress.toUpperCase() + " 테스크 수는 :" + progressCount);

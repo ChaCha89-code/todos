@@ -16,13 +16,15 @@ public enum Progress {
     }
 
     // @Request
+    // 사실 static으로 만들 이유는 크--게 있지는 않으나, 지금 수정하기엔 조금 늦어 냅둠니다
     public static Progress fromString(String str) {
         for (Progress p : values()) {
             if (p.strValue.equalsIgnoreCase(str)) {
                 return p;
             }
         }
-        throw new IllegalArgumentException("Invalid progress: " + str);
+        // 일치하는 enum 이 없을 때 예외발생
+        throw new IllegalArgumentException("일치하는 Enum이 없습니다 " + str);
     }
 
 

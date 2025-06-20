@@ -6,7 +6,7 @@ import com.github.chacha89.todos.todo.entity.Todo;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class GetTodoListResponseDto {
+public class TodoGetListResponseDto {
     private String title;
     private String image;
     private String todoContents;
@@ -19,7 +19,7 @@ public class GetTodoListResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private  GetTodoListResponseDto(Todo todo) {
+    private TodoGetListResponseDto(Todo todo) {
         this.title = todo.getTitle();
         this.image = todo.getImage();
         this.todoContents = todo.getContent();
@@ -32,8 +32,8 @@ public class GetTodoListResponseDto {
         this.createdAt = todo.getCreatedAt();
         this.updatedAt = todo.getUpdatedAt();
     }
-    public static GetTodoListResponseDto getTodoListResponseDto(Todo todo){
-        return new GetTodoListResponseDto(todo);
+    public static TodoGetListResponseDto getTodoListResponseDto(Todo todo){
+        return new TodoGetListResponseDto(todo);
     }
 
     public String getTitle() {

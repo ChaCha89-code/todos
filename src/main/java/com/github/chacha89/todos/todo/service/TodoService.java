@@ -272,7 +272,7 @@ public class TodoService {
      * @return
      */
     @Transactional
-    public TodoListPaginatedResponseDto<GetTodoListResponseDto>  getTodoListService(Progress progress, int page,
+    public TodoListPaginatedResponseDto<TodoGetListResponseDto>  getTodoListService(Progress progress, int page,
                                                                                     int size, String content) {
         // 데이터 준비
         Pageable pageable = PageRequest.of(page, size);
@@ -280,12 +280,13 @@ public class TodoService {
         Page<Todo> todoListPageFromTodo
                 = todoRepository.findByContentContainingAndProgressOrderByUpdatedAtDesc(content, progress, pageable);
 
-        List<GetTodoListResponseDto> getTodoListResponseDto = todoListPageFromTodo
+        List<TodoGetListResponseDto> todoGetListResponseDto = todoListPageFromTodo
                 .stream()
-                .map(Todo -> GetTodoListResponseDto.getTodoListResponseDto(Todo)).toList();
+                .map(Todo -> TodoGetListResponseDto.getTodoListResponseDto(Todo)).toList();
 
         //반환 준비
-        TodoListPaginatedResponseDto<GetTodoListResponseDto> paginatedResponseDto = new TodoListPaginatedResponseDto<>(getTodoListResponseDto,
+        TodoListPaginatedResponseDto<TodoGetListResponseDto> paginatedResponseDto
+                = new TodoListPaginatedResponseDto<>(todoGetListResponseDto,
                 todoListPageFromTodo.getTotalElements(),
                 todoListPageFromTodo.getTotalPages(), size);
         return paginatedResponseDto;

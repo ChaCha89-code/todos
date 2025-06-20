@@ -1,4 +1,4 @@
-package com.github.chacha89.todos.activitylog.dto;
-
-public class LogCreateRequestDto {
-}
+//package com.github.chacha89.todos.activitylog.dto;
+//
+//public class LogCreateRequestDto {
+//}
