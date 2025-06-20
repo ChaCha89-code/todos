@@ -1,5 +1,6 @@
 package com.github.chacha89.todos.common.exception;
 
+import com.github.chacha89.todos.activitylog.exception.ActivityLogNotfoundException;
 import com.github.chacha89.todos.auth.exception.LoginEmailNotFoundException;
 import com.github.chacha89.todos.auth.exception.LoginInvalidPasswordException;
 import com.github.chacha89.todos.auth.exception.PasswordMismatchException;
@@ -82,6 +83,11 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(APIResponse.fail(401,"비밀번호가 일치하지 않습니다.",null));
 
+    }
+
+    @ExceptionHandler(ActivityLogNotfoundException.class)
+    public ResponseEntity<APIResponse> handleActivityLogNotFound(ActivityLogNotfoundException activityLogNotfoundException) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(APIResponse.fail(404, "활동 로그가 없습니다."));
     }
 
 

@@ -90,4 +90,36 @@ public class ActivityLog {
     public void setRequestTime(LocalDateTime requestTime) {
         this.requestTime = requestTime;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public Long getTargetId() {
+        return targetId;
+    }
+
+    public String getActivityType() {
+        return activityType;
+    }
+
+    public String getRequestUrl() {
+        return requestUrl;
+    }
+
+    public String getRequestMethod() {
+        return requestMethod;
+    }
+
+    public String getRequestIp() {
+        return requestIp;
+    }
+
+    public LocalDateTime getRequestTime() {
+        return requestTime;
+    }
 }
