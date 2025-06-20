@@ -2,8 +2,8 @@ package com.github.chacha89.todos.aop;
 
 import com.github.chacha89.todos.activitylog.entity.ActivityLog;
 import com.github.chacha89.todos.activitylog.repository.ActivityLogRepository;
-import com.github.chacha89.todos.jwt.service.JWTService;
-import com.github.chacha89.todos.todo.entity.Progress;
+import com.github.chacha89.todos.jwt.service.JWTUtil;
+import com.github.chacha89.todos.common.commonEnum.Progress;
 import com.github.chacha89.todos.todo.repository.TodoRepository;
 import com.github.chacha89.todos.user.entity.User;
 import com.github.chacha89.todos.user.repository.UserRepository;
@@ -25,15 +25,15 @@ public class ActivityLogAspect {
 
     // 속성
     private final ActivityLogRepository activityLogRepository;
-    private final JWTService jwtService;
+    private final JWTUtil jwtUtil;
     private final TodoRepository todoRepository;
     private final UserRepository userRepository;
 
 
     // 생성자
-    public ActivityLogAspect(ActivityLogRepository activityLogRepository, JWTService jwtService, TodoRepository todoRepository, UserRepository userRepository) {
+    public ActivityLogAspect(ActivityLogRepository activityLogRepository, JWTUtil jwtUtil, TodoRepository todoRepository, UserRepository userRepository) {
         this.activityLogRepository = activityLogRepository;
-        this.jwtService = jwtService;
+        this.jwtUtil = jwtUtil;
         this.todoRepository = todoRepository;
         this.userRepository = userRepository;
     }
@@ -89,7 +89,7 @@ public class ActivityLogAspect {
         String token = header.substring(7);
 
         // 3. 토큰 검증
-        Claims claims = jwtService.verifyToken(token);
+        Claims claims = jwtUtil.verifyToken(token);
         log.info("claims: {}", claims);
 
         // 4. ActivityLog 안에 값 넣어주기

@@ -1,16 +1,16 @@
 package com.github.chacha89.todos.jwt.controller;
 
-import com.github.chacha89.todos.jwt.service.JWTService;
+import com.github.chacha89.todos.jwt.service.JWTUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth/refresh")
 public class JWTController {
-    private final JWTService jwtService;
+    private final JWTUtil jwtUtil;
 
-    public JWTController(JWTService jwtService) {
-        this.jwtService = jwtService;
+    public JWTController(JWTUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
     }
     public void refreshToken() {}
 }

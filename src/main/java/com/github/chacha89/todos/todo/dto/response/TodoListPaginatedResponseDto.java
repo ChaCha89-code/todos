@@ -3,12 +3,12 @@ package com.github.chacha89.todos.todo.dto.response;
 import java.util.List;
 
 public class TodoListPaginatedResponseDto<T> {
-    private List<T> todo;       // 페이지 데이터
+    private List<GetTodoListResponseDto> todo;       // 페이지 데이터
     private long totalElements; // 전체 데이터 수
     private int totalPages;     // 전체 페이지 수
     private int currentPage;    // 현재 페이지
 
-    public TodoListPaginatedResponseDto(List<T> data, long totalElements, int totalPages, int currentPage) {
+    public TodoListPaginatedResponseDto(List<GetTodoListResponseDto> data, long totalElements, int totalPages, int currentPage) {
 
         this.todo = data;
         this.totalElements = totalElements;
@@ -17,7 +17,7 @@ public class TodoListPaginatedResponseDto<T> {
     }
 
 
-    public List<T> getTodo() {
+    public List<GetTodoListResponseDto> getTodo() {
         return todo;
     }
 

@@ -1,10 +1,11 @@
 package com.github.chacha89.todos.team.service;
 
-import com.github.chacha89.todos.exception.TeamCreateException;
+import com.github.chacha89.todos.team.exception.TeamCreateException;
 import com.github.chacha89.todos.team.dto.requestDto.TeamCreateRequestDto;
 import com.github.chacha89.todos.team.dto.responseDto.TeamCreateResponseDto;
 import com.github.chacha89.todos.team.entity.Team;
 import com.github.chacha89.todos.team.repository.TeamRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +22,7 @@ public class TeamService {
     /**
      * 팀 생성 기능
      */
+
     public TeamCreateResponseDto createTeamService(TeamCreateRequestDto requestDto) {
         // 1. 데이터 준비
         String teamName = requestDto.getTeamName();

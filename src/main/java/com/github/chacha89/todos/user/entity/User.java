@@ -55,7 +55,8 @@ public class User {
         return deleted;
     }
 
-    public User() {}
+    // JPA가 사용하기 위한 생성자. 캡슐화
+    protected User() {}
 
     //
     public User(Team team, String userName, String email, String password, String userImage) {

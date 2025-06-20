@@ -1,8 +1,8 @@
 package com.github.chacha89.todos.user.service;
 
-import com.github.chacha89.todos.exception.PasswordMismatchException;
-import com.github.chacha89.todos.exception.UserCreateException;
-import com.github.chacha89.todos.exception.UserIdNotFoundException;
+import com.github.chacha89.todos.auth.exception.PasswordMismatchException;
+import com.github.chacha89.todos.user.exception.UserCreateException;
+import com.github.chacha89.todos.user.exception.UserIdNotFoundException;
 import com.github.chacha89.todos.team.entity.Team;
 import com.github.chacha89.todos.team.repository.TeamRepository;
 import com.github.chacha89.todos.todo.repository.TodoRepository;
@@ -13,7 +13,6 @@ import com.github.chacha89.todos.user.dto.responseDto.UserInfoResponseDto;
 import com.github.chacha89.todos.user.entity.User;
 import com.github.chacha89.todos.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -47,6 +46,7 @@ public class UserService {
     /**
      * 회원 가입 기능
      */
+    @Transactional
     public UserCreateResponseDto createUserService(UserCreateRequestDto requestDto) {
         // 1. 데이터 준비
         String teamName = requestDto.getTeamName();
@@ -129,6 +129,7 @@ public class UserService {
      * @param id
      * @return
      */
+    @Transactional
     public UserInfoResponseDto getUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
@@ -139,6 +140,7 @@ public class UserService {
     /**
      * 회원 수정
      */
+    @Transactional
     public UserCreateResponseDto updateUserAPI(Long id, UserUpdateRequestDto updateRequest){
 
         //1. 변경할 user 객체 찾기

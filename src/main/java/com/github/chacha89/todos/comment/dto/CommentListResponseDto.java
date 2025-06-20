@@ -6,7 +6,7 @@ import com.github.chacha89.todos.comment.entity.Comment;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class CommentListResponseDto<T> {
+public class CommentListResponseDto {
     //속
     private Long id;
     private Long userId;
