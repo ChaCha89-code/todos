@@ -55,7 +55,7 @@ public class User {
         return deleted;
     }
 
-    public User() {}
+    protected User() {}
 
     //
     public User(Team team, String userName, String email, String password, String userImage) {

@@ -8,11 +8,48 @@ import com.github.chacha89.todos.exception.UserDeletedException;
 import com.github.chacha89.todos.jwt.service.JWTService;
 import com.github.chacha89.todos.user.entity.User;
 import com.github.chacha89.todos.user.repository.UserRepository;
+import io.jsonwebtoken.security.Password;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+//@Slf4j
+//@Service
+//public class LoginService {
+//    private final UserRepository userRepository;
+//    private final PasswordEncoder passwordEncoder;
+//    private final JWTService jwtService;
+//
+//    public LoginService(UserRepository userRepository, PasswordEncoder passwordEncoder, JWTService jwtService) {
+//        this.userRepository = userRepository;
+//        this.passwordEncoder = passwordEncoder;
+//        this.jwtService = jwtService;
+//    }
+//    @Transactional
+//    public LoginResponseDto JWTAuthLoginAPI(LoginRequestDto loginRequestDto) {
+//        // 사용자 조회
+//        User user = userRepository.findByEmail(loginRequestDto.getEmail())
+//                .orElseThrow(() -> new LoginEmailNotFoundException());
+//        // 삭제된 회원인지 확인
+//        if (user.getDeleted()) {
+//            throw new UserDeletedException("삭제된 회원입니다.");
+//        }
+//
+//        // 입력한 비밀번호와 기존 비밀번호 맞는지 확인
+//        boolean passwordMatches
+//                = passwordEncoder
+//                .matches(loginRequestDto.getPassword(), user.getPassword());
+//        if (!passwordMatches) {
+//            throw new LoginInvalidPasswordException();
+//        }
+//        // 로그인 성공 후 토큰 발급
+//        String jwtKey = jwtService.createJWTKey(user, user.getId());
+//        return new LoginResponseDto(200,"OK",jwtKey);
+//
+//    }
+//}
 
 @Slf4j
 @Service
@@ -21,31 +58,35 @@ public class LoginService {
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
 
-    public LoginService(UserRepository userRepository, PasswordEncoder passwordEncoder, JWTService jwtService) {
+
+    public LoginService(UserRepository userRepository, PasswordEncoder passwordEncoder, JWTService jwtService ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtService = jwtService;
+        this.jwtService =jwtService;
+
     }
     @Transactional
-    public LoginResponseDto JWTAuthLoginAPI(LoginRequestDto loginRequestDto) {
-        // 사용자 조회
-        User user = userRepository.findByEmail(loginRequestDto.getEmail())
-                .orElseThrow(() -> new LoginEmailNotFoundException());
-        // 삭제된 회원인지 확인
+    public LoginResponseDto JWTAuthLoginAPI(LoginRequestDto requestDto){
+    // 사용자 조회
+        User user = userRepository.findByEmail(requestDto.getEmail())
+                .orElseThrow(() ->new LoginEmailNotFoundException());
+        //삭제된 회원인지 확인
         if (user.getDeleted()) {
             throw new UserDeletedException("삭제된 회원입니다.");
         }
-
-        // 입력한 비밀번호와 기존 비밀번호 맞는지 확인
+        //입력한 비밀번호와 기존 비밀번호 확인
         boolean passwordMatches
-                = passwordEncoder
-                .matches(loginRequestDto.getPassword(), user.getPassword());
-        if (!passwordMatches) {
+                =passwordEncoder
+                .matches(requestDto.getPassword(),user.getPassword());
+        if (passwordMatches ==false) {
             throw new LoginInvalidPasswordException();
         }
-        // 로그인 성공 후 토큰 발급
-        String jwtKey = jwtService.createJWTKey(user, user.getId());
-        return new LoginResponseDto(HttpStatus.OK,jwtKey);
 
+        //로그인 성공 후 토큰 발글
+
+        String jwtKey = jwtService.createJWTKey(user, user.getId());
+        return new LoginResponseDto(200,"ok",jwtKey);
     }
 }
+
+

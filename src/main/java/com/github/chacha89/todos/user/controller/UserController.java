@@ -24,18 +24,23 @@ public class UserController {
     }
 
     /**
-     * 회원 가입 API
-     * @param requestDto
-     * @return
-     */
+//     * 회원 가입 API
+//     * @param requestDto
+//     * @return
+//     */
+//    @PostMapping
+//    public ResponseEntity<UserCreateResponseDto> createUserAPI(@ModelAttribute UserCreateRequestDto requestDto) {
+//
+//
+//        UserCreateResponseDto responseDto = userService.createUserService(requestDto);
+//        return ResponseEntity.ok(responseDto);
+//    }
+//-------------------------------
     @PostMapping
-    public ResponseEntity<UserCreateResponseDto> createUserAPI(@ModelAttribute UserCreateRequestDto requestDto) {
-
-
+    public APIResponse<UserCreateResponseDto> createUserAPI(@ModelAttribute UserCreateRequestDto requestDto){
         UserCreateResponseDto responseDto = userService.createUserService(requestDto);
-        return ResponseEntity.ok(responseDto);
+        return APIResponse.success(responseDto,"회원 가입 성공");
     }
-
 
     /**
      * 회원 조회 API
